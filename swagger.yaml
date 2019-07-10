@@ -1,0 +1,1889 @@
+swagger: '2.0'
+info:
+  title: Clickworker API
+  version: 2.0.0
+host: sandbox.clickworker.com
+schemes:
+  - https
+securityDefinitions:
+  basicAuth:
+    type: basic
+    description: HTTP Basic Authentication.
+security:
+  - basicAuth: []
+basePath: /api/marketplace/v2
+produces:
+  - application/json
+  - application/xml
+consumes:
+  - application/json
+parameters:
+  _page_size:
+    name: _page_size
+    in: query
+    type: integer
+    required: false
+    default: ''
+    description: >-
+      Results of index requests use pagination to prevent excessive transfer
+      volume. This URL parameter can control the page size. The default is 50.
+      More size will be adjusted to 50 as well.
+  _page_number:
+    name: _page_number
+    in: query
+    type: integer
+    required: false
+    default: ''
+    description: >-
+      Defines the current page of a paginated result. E.g., a page size of 25
+      and a page number of 4 will display records from 76 to 100. The default is
+      1.
+paths:
+  /customer:
+    get:
+      summary: User profile
+      description: |
+        Get the account information.
+      responses:
+        '200':
+          description: The users profile information
+          schema:
+            type: object
+            properties:
+              customer_response:
+                type: object
+                properties:
+                  request_status:
+                    $ref: '#/definitions/RequestStatus'
+                  customer:
+                    $ref: '#/definitions/Customer'
+  /customer/task_templates:
+    get:
+      summary: Index Registered Task Templates
+      description: |
+        Indexing registered Task Templates will produce a brief overview.
+      tags:
+        - TaskTemplate
+      responses:
+        '200':
+          description: An array of task templates
+          schema:
+            type: object
+            properties:
+              task_templates_response:
+                type: object
+                properties:
+                  request_status:
+                    $ref: '#/definitions/RequestStatus'
+                  task_templates:
+                    type: array
+                    items:
+                      $ref: '#/definitions/TaskTemplatePreview'
+    post:
+      summary: Create a new Task Template
+      description: >
+        In order to submit work to Clickworker through the API, the customer
+        must provide information on how his request is structured and in which
+        form results are expected back. For example, one customer might want to
+        order a text using our TextCreate product, which should be structured
+        using a title section and a content section, while another customer
+        might need the text to be structured using title, abstract, and content
+        sections.
+
+
+        Similarly, one customer might provide a list of URLs of company websites
+        when using our product AddressResearch, while another customer might
+        supply the company name and address for verification using the
+        AddressResearch product.
+
+
+        TaskTemplates are used to define input and result structures, as well as
+        to specify additional parameters required to fulfill a task, such as the
+        target language for an article.
+
+
+        For each input and result field, additional options can be supplied to
+        control the presentation of each field. Constraints, such as whether a
+        field is optional or mandatory, can also be supplied.
+
+
+        To summarize, a Task Template serves multiple purposes:
+
+        * Select and configure an existing product by using its defined Product
+        Attributes.
+
+        * Define how Tasks are presented to the clickworker using Form Elements
+
+        * Select or exclude clickworkers from certain Tasks using Clickworker
+        List references.
+      tags:
+        - TaskTemplate
+      parameters:
+        - name: task_template
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              code:
+                type: string
+                description: The symbolic Task Template code
+              name:
+                type: string
+                description: >-
+                  A short text helping the customer identify the purpose of the
+                  Template
+              titles:
+                type: object
+                description: >-
+                  A short text used when presenting tasks to clickworkers
+                  (either as a list or in detail)
+                properties:
+                  en:
+                    type: string
+                  de:
+                    type: string
+              descriptions:
+                type: object
+                description: >-
+                  A more extensive text containing a task summary that is
+                  presented to the clickworker.
+                properties:
+                  en:
+                    type: string
+                  de:
+                    type: string
+              product:
+                type: object
+                properties:
+                  link:
+                    type: array
+                    items:
+                      $ref: '#/definitions/Link'
+                  attributes:
+                    type: array
+                    items:
+                      $ref: '#/definitions/Attribute'
+              form:
+                type: object
+                properties:
+                  elements:
+                    type: array
+                    items:
+                      $ref: '#/definitions/FormElement'
+            xml:
+              name: task_template
+            example:
+              task_template:
+                code: tpl_text_create_keywords_en
+                name: Standard Text Creation Template (English)
+                titles:
+                  en: Please write a message with keywords
+                descriptions:
+                  en: >-
+                    You are required to write a short English message,
+                    containing at least 50 words, with a keyword in it.
+                product:
+                  link:
+                    - href: /api/marketplace/v2/products/TextCreateWithKeywords
+                      rel: product
+                      type: application/json
+                  attributes:
+                    - code: textcreatewithkeywords_language
+                      value: en
+                    - code: textcreatewithkeywords_text_length
+                      value: '10#55'
+                    - code: textcreatewithkeywords_proof_read
+                      value: textcreate_proof_no
+                form:
+                  elements:
+                    - type: text_field
+                      titles:
+                        en: Topic
+                      item_code: topic
+                      is_output: false
+      responses:
+        '200':
+          description: the Task Template was successfully created
+          schema:
+            type: object
+            properties:
+              task_response:
+                type: object
+                properties:
+                  request_status:
+                    $ref: '#/definitions/RequestStatus'
+                  task:
+                    $ref: '#/definitions/TaskTemplate'
+        '409':
+          description: a Task Template of the given code already exists
+          schema:
+            type: object
+            properties:
+              task_response:
+                type: object
+                properties:
+                  request_status:
+                    $ref: '#/definitions/RequestStatusError'
+  '/customer/task_templates/{code}':
+    parameters:
+      - name: code
+        in: path
+        required: true
+        type: string
+        description: >-
+          The Task Templates code as defined by the customer at the time of
+          creation
+    get:
+      summary: View Task Template Details
+      tags:
+        - TaskTemplate
+      responses:
+        '200':
+          description: the request was successfully handled
+          schema:
+            type: object
+            properties:
+              task_template_response:
+                type: object
+                properties:
+                  request_status:
+                    $ref: '#/definitions/RequestStatus'
+                  task_template:
+                    $ref: '#/definitions/TaskTemplate'
+        '404':
+          description: the addressed Task Template does not exist
+          schema:
+            type: object
+            properties:
+              task_response:
+                type: object
+                properties:
+                  request_status:
+                    $ref: '#/definitions/RequestStatusError'
+  '/customer/task_templates/{code}/blacklist':
+    put:
+      summary: Add clickworkers to blacklist. Valid_until is optional.
+      tags:
+        - TaskTemplate
+      parameters:
+        - name: code
+          in: path
+          required: true
+          type: string
+          description: >-
+            The Task Templates code as defined by the customer at the time of
+            creation
+        - name: blacklist
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              clickworker_ids:
+                type: array
+                items:
+                  type: integer
+              valid_until:
+                type: string
+            required:
+              - clickworker_ids
+            example:
+              blacklist:
+                clickworker_ids:
+                  - 1
+                  - 2
+                  - 3
+                valid_until: '2016-08-13 00:00:00'
+      responses:
+        '200':
+          description: Response
+          schema:
+            type: object
+            properties:
+              blacklist_response:
+                type: object
+                properties:
+                  request_status:
+                    $ref: '#/definitions/RequestStatus'
+  /customer/tasks:
+    get:
+      summary: List Tasks
+      description: >
+        ##### Task States
+
+        The Task State indicates the current status of the Task. It is derived
+        from a more extensive set of internal states but mapped to the following
+        “public” states:
+
+
+        | State       | Description |
+
+        |-------------|----------|
+
+        | Unconfirmed | The task has been created but needs to be confirmed by
+        the customer.   |
+
+        | Confirmed   | The task has been confirmed by the customer and is ready
+        for queuing. |
+
+        | Queued      | The task is waiting for clickworkers to apply for the
+        associated jobs. |
+
+        | Running     | Clickworkers are currently working on the task’s jobs. |
+
+        | Cancelled   | The task has been cancelled by the customer. |
+
+        | Feedback    | The task requires feedback – such as a buyoff by the
+        customer. |
+
+        | Finished    | The task is finished and contains the result data. |
+
+        | Deleted     | The task has been marked as deleted and will not be
+        listed in index requests any more. However, it is still available as
+        long as it is referenced by other entities, likes Jobs or Notifications.
+        |
+      tags:
+        - Task
+      parameters:
+        - name: state
+          in: query
+          type: string
+          required: false
+          enum:
+            - Unconfirmed
+            - Confirmed
+            - Queued
+            - Running
+            - Cancelled
+            - Feedback
+            - Finished
+            - Deleted
+          description: >-
+            Filters tasks by specified state. List of possible values, see
+            above.
+        - name: from
+          in: query
+          type: string
+          required: false
+          default: ''
+          description: >-
+            Filters tasks by created_at attribute from specified date. Expected
+            format is dd.mm.yyyy
+        - name: to
+          in: query
+          type: string
+          required: false
+          default: ''
+          description: >-
+            Filters finished task by created_at attribute to specified date.
+            Expected format is dd.mm.yyyy
+        - name: finished_from
+          in: query
+          type: string
+          required: false
+          default: ''
+          description: >-
+            Filters finished tasks by finished_at attribute from specified date.
+            Expected format is dd.mm.yyyy
+        - name: finished_to
+          in: query
+          type: string
+          required: false
+          default: ''
+          description: >-
+            Filters finished task by created_at attribute to specified date.
+            Expected format is dd.mm.yyyy
+        - name: order_id
+          in: query
+          type: string
+          required: false
+          default: ''
+          description: >-
+            If you are using different projects under one account, these are
+            separated by an order_id. On task creation the order id is returned.
+        - $ref: '#/parameters/_page_size'
+        - $ref: '#/parameters/_page_number'
+      responses:
+        '200':
+          description: >-
+            The request could be successfully handled (even if no tasks were
+            found)
+          schema:
+            type: object
+            properties:
+              task_response:
+                type: object
+                properties:
+                  request_status:
+                    $ref: '#/definitions/RequestStatus'
+                  tasks:
+                    type: array
+                    items:
+                      $ref: '#/definitions/PreviewTask'
+    post:
+      summary: Create Task
+      description: >
+        A customer makes new work available by creating a task. Tasks are
+        automatically confirmed and distributed to the crowd for resolution.
+
+
+        Customers can choose to receive notifications upon task completion.
+
+        Notifications are callbacks to the customer’s system that keep customers
+        informed of certain events related to a specific task. Notifications for
+        the following events can be configured:
+
+        * TASK_COMPLETED: This event is triggered when all work related to the
+        task, including the customer’s review, has been completed.
+
+        * TASK_TIMEDOUT: This event is triggered when the maximum duration or
+        due date for the task has elapsed and the task has not been completed.
+
+        * CUSTOMER_INPUT_REQUIRED: This event is triggered when additional input
+        is required from the customer, such as approval of an article.
+
+
+        The Notification sent to the given “callback url” will contain the
+        following information:
+
+        1. The event code, as described above
+
+        2. The URI of the task that triggered the event
+
+        If callback_method was set to POST, the Notification payload will be the
+        only element in the body of the request. If the method was set to GET,
+        the notification will be a URL- compliant serialization of the data and
+        become the value of a query string parameter named “payload”.
+
+
+        Please note that because of URL length restrictions, the use of the POST
+        method is highly recommended!
+      tags:
+        - Task
+      parameters:
+        - name: task
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              customer_ref:
+                type: string
+              template:
+                type: object
+                properties:
+                  link:
+                    type: array
+                    items:
+                      $ref: '#/definitions/Link'
+              notifications:
+                type: array
+                items:
+                  $ref: '#/definitions/NotificationRegistration'
+            required:
+              - template
+            example:
+              task:
+                customer_ref: '1234'
+                template:
+                  link:
+                    href: /api/marketplace/v2/customer/task_templates/my_template
+                input:
+                  items:
+                    - code: product_name
+                      content: Chair
+                    - code: attributes
+                      content: Wood
+                notifications:
+                  - event: CUSTOMER_INPUT_REQUIRED
+                    callback_url: 'http://notification.example.com'
+                    callback_method: POST
+                    payload_format: JSON
+                  - event: TASK_COMPLETED
+                    callback_url: 'http://notification.example.com'
+                    callback_method: POST
+                    payload_format: JSON
+      responses:
+        '201':
+          description: The task has successfully been created
+          schema:
+            type: object
+            properties:
+              task_response:
+                type: object
+                properties:
+                  request_status:
+                    $ref: '#/definitions/RequestStatus'
+                  task:
+                    $ref: '#/definitions/Task'
+        '404':
+          description: The referenced Task Template does not exist
+          schema:
+            type: object
+            properties:
+              task_response:
+                type: object
+                properties:
+                  request_status:
+                    $ref: '#/definitions/RequestStatusError'
+  /customer/tasks/search:
+    get:
+      summary: Search Tasks by Customer Reference
+      tags:
+        - Task
+      parameters:
+        - name: customer_ref
+          in: query
+          type: string
+          required: false
+          default: ''
+          description: >-
+            Filters tasks by specified No customer_reference. If parameter is
+            not specified, it filters tasks by customer_reference = NULL
+      responses:
+        '200':
+          description: >-
+            The request could be successfully handled (even if no tasks were
+            found)
+          schema:
+            type: object
+            properties:
+              task_response:
+                type: object
+                properties:
+                  request_status:
+                    $ref: '#/definitions/RequestStatus'
+                  tasks:
+                    type: array
+                    items:
+                      $ref: '#/definitions/PreviewTask'
+  '/customer/tasks/{id}':
+    parameters:
+      - name: id
+        in: path
+        type: integer
+        required: true
+        description: >-
+          The automatically generated Task id as returned by the Create Task
+          operation
+    get:
+      summary: View Task Details
+      tags:
+        - Task
+      parameters:
+        - name: show_cloned_task
+          in: query
+          type: boolean
+          required: false
+          description: >-
+            If is true and the the task has cloned task, than the data of the
+            cloned task will be shown.
+      responses:
+        '200':
+          description: The requested resource was found
+          schema:
+            type: object
+            properties:
+              task_response:
+                type: object
+                properties:
+                  request_status:
+                    $ref: '#/definitions/RequestStatus'
+                  task:
+                    $ref: '#/definitions/Task'
+        '404':
+          description: >-
+            The requested resource was not found or the given customer id is not
+            associated with the detected credentials
+          schema:
+            type: object
+            properties:
+              task_response:
+                type: object
+                properties:
+                  request_status:
+                    $ref: '#/definitions/RequestStatusError'
+    delete:
+      summary: Delete a task
+      tags:
+        - Task
+      responses:
+        '204':
+          description: The request could be successfully handled
+          schema:
+            type: object
+            properties:
+              task_response:
+                type: object
+                properties:
+                  request_status:
+                    $ref: '#/definitions/RequestStatus'
+        '404':
+          description: The given resource was not found
+          schema:
+            type: object
+            properties:
+              task_response:
+                type: object
+                properties:
+                  request_status:
+                    $ref: '#/definitions/RequestStatusError'
+        '409':
+          description: The task could not be deleted
+          schema:
+            type: object
+            properties:
+              task_response:
+                type: object
+                properties:
+                  request_status:
+                    $ref: '#/definitions/RequestStatusError'
+  '/customer/tasks/{id}/external_submit':
+    parameters:
+      - name: id
+        in: path
+        type: integer
+        required: true
+        description: >-
+          The automatically generated Task id as returned by the Create Task
+          operation
+    post:
+      summary: Submit task results from an external form (used for iframe tasks)
+      description: >
+        When the task-form is hosted on your platform, we need a way to know
+        when the clickworker has finished the task. As soon as the clickworker
+        saves the form on the external platform, you should call this endpoint
+        to let us know about the submit.
+      tags:
+        - Task
+      parameters:
+        - name: submit
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              clickworker_id:
+                type: number
+                format: int32
+            required:
+              - clickworker_id
+            example:
+              submit:
+                clickworker_id: 2
+      responses:
+        '201':
+          description: the Task was created successfully
+          schema:
+            type: object
+            properties:
+              external_submit_response:
+                type: object
+                properties:
+                  request_status:
+                    $ref: '#/definitions/RequestStatus'
+                  external_submit:
+                    $ref: '#/definitions/Submit'
+        '404':
+          description: the addressed Task does not exist
+          schema:
+            type: object
+            properties:
+              external_submit_response:
+                type: object
+                properties:
+                  request_status:
+                    $ref: '#/definitions/RequestStatusError'
+
+  '/customer/tasks/{id}/external_submit/{job_id}':
+    parameters:
+      - name: id
+        in: path
+        type: integer
+        required: true
+        description: >-
+          The automatically generated Task id as returned by the Create Task
+          operation
+    post:
+      summary: Submit task results from an external form of a specific job (used for iframe tasks)
+      description: >
+        When the task-form is hosted on your platform, we need a way to know
+        when the clickworker has finished the task. As soon as the clickworker
+        saves the form on the external platform, you should call this endpoint
+        to let us know about the submit.
+      tags:
+        - Task
+      parameters:
+        - name: job_id
+          in: path
+          type: integer
+          required: true
+          description: >-
+            The automatically generated Job id which belongs to the current Task.
+      responses:
+        '201':
+          description: the Task was created successfully
+          schema:
+            type: object
+            properties:
+              external_submit_response:
+                type: object
+                properties:
+                  request_status:
+                    $ref: '#/definitions/RequestStatus'
+                  external_submit:
+                    $ref: '#/definitions/Submit'
+        '404':
+          description: the addressed Task or Job does not exist
+          schema:
+            type: object
+            properties:
+              external_submit_response:
+                type: object
+                properties:
+                  request_status:
+                    $ref: '#/definitions/RequestStatusError'
+
+  '/customer/tasks/{id}/accept':
+    parameters:
+      - name: id
+        in: path
+        type: integer
+        required: true
+        description: >-
+          The automatically generated Task id as returned by the Create Task
+          operation
+    put:
+      summary: Accept the results of this task (used for iframe tasks)
+      description: |
+        Accept the results of this task. You can add an optional description.
+      tags:
+        - Task
+      parameters:
+        - name: accept
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              description:
+                type: string
+            example:
+              accept:
+                description: Well done!
+      responses:
+        '201':
+          description: the Task was accepted successfully
+          schema:
+            type: object
+            properties:
+              accept_response:
+                type: object
+                properties:
+                  request_status:
+                    $ref: '#/definitions/RequestStatus'
+                  accept:
+                    $ref: '#/definitions/Accept'
+        '404':
+          description: the addressed Task does not exist
+          schema:
+            type: object
+            properties:
+              accept_response:
+                type: object
+                properties:
+                  request_status:
+                    $ref: '#/definitions/RequestStatusError'
+
+  '/customer/tasks/{id}/accept/{job_id}':
+    parameters:
+      - name: id
+        in: path
+        type: integer
+        required: true
+        description: >-
+          The automatically generated Task id as returned by the Create Task
+          operation
+      - name: job_id
+        in: path
+        type: integer
+        required: true
+        description: >-
+          The automatically generated Job id which belongs to the current Task.
+    put:
+      summary: Accept the results of a job of this task (used for iframe tasks)
+      description: |
+        Accept the results of a job of this task. You can add an optional description.
+      tags:
+        - Task
+      parameters:
+        - name: accept
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              description:
+                type: string
+            example:
+              accept:
+                description: Well done!
+      responses:
+        '201':
+          description: the Task was accepted successfully
+          schema:
+            type: object
+            properties:
+              accept_response:
+                type: object
+                properties:
+                  request_status:
+                    $ref: '#/definitions/RequestStatus'
+                  accept:
+                    $ref: '#/definitions/Accept'
+        '404':
+          description: the addressed Task does not exist
+          schema:
+            type: object
+            properties:
+              accept_response:
+                type: object
+                properties:
+                  request_status:
+                    $ref: '#/definitions/RequestStatusError'
+
+  '/customer/tasks/{id}/reject':
+    parameters:
+      - name: id
+        in: path
+        type: integer
+        required: true
+        description: >-
+          The automatically generated Task id as returned by the Create Task
+          operation
+    put:
+      summary: Reject the results of this task (used for iframe tasks)
+      description: |
+        Reject the results of this task.
+      tags:
+        - Task
+      parameters:
+        - name: reject
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              description:
+                type: string
+            example:
+              reject:
+                description: Well done!
+      responses:
+        '201':
+          description: the Task was rejected successfully
+          schema:
+            type: object
+            properties:
+              reject_response:
+                type: object
+                properties:
+                  request_status:
+                    $ref: '#/definitions/RequestStatus'
+                  reject:
+                    $ref: '#/definitions/Accept'
+        '404':
+          description: the addressed Task does not exist
+          schema:
+            type: object
+            properties:
+              reject_response:
+                type: object
+                properties:
+                  request_status:
+                    $ref: '#/definitions/RequestStatusError'
+
+  '/customer/tasks/{id}/reject/{job_id}':
+    parameters:
+      - name: id
+        in: path
+        type: integer
+        required: true
+        description: >-
+          The automatically generated Task id as returned by the Create Task
+          operation
+      - name: job_id
+        in: path
+        type: integer
+        required: true
+        description: >-
+          The automatically generated Job id which belongs to the current Task.
+    put:
+      summary: Reject the results of a job of this task (used for iframe tasks)
+      description: |
+        Reject the results of a job of this task.
+      tags:
+        - Task
+      parameters:
+        - name: reject
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              description:
+                type: string
+            example:
+              reject:
+                description: Well done!
+      responses:
+        '201':
+          description: the Task was rejected successfully
+          schema:
+            type: object
+            properties:
+              reject_response:
+                type: object
+                properties:
+                  request_status:
+                    $ref: '#/definitions/RequestStatus'
+                  reject:
+                    $ref: '#/definitions/Accept'
+        '404':
+          description: the addressed Task does not exist
+          schema:
+            type: object
+            properties:
+              reject_response:
+                type: object
+                properties:
+                  request_status:
+                    $ref: '#/definitions/RequestStatusError'
+  '/customer/tasks/{id}/grant_bonus':
+    parameters:
+      - name: id
+        in: path
+        type: integer
+        required: true
+        description: >-
+          The automatically generated Task id as returned by the Create Task
+          operation
+    post:
+      summary: Clickworker Bonus Payment
+      description: >
+        A customer has a way to make bonus payments to clickworkers. NOTE: 40%
+        of the amount will be added to the basic payment.
+      tags:
+        - Task
+      parameters:
+        - name: bonus
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              amount:
+                type: number
+                format: float
+                description: >-
+                  Specified in Euros/Dollar depending on the currency you are
+                  paying in.
+              clickworker_id:
+                type: number
+                format: int32
+              comment:
+                type: string
+            required:
+              - amount
+              - clickworker_id
+            example:
+              bouns:
+                clickworker_id: 2
+                amount: 3
+      responses:
+        '201':
+          description: the bonus was granted
+          schema:
+            type: object
+            properties:
+              grant_bonus_response:
+                type: object
+                properties:
+                  request_status:
+                    $ref: '#/definitions/RequestStatus'
+                  bonus:
+                    $ref: '#/definitions/Bonus'
+        '404':
+          description: the addressed Task does not exist
+          schema:
+            type: object
+            properties:
+              grant_bonus_response:
+                type: object
+                properties:
+                  request_status:
+                    $ref: '#/definitions/RequestStatusError'
+  '/customer/tasks/{id}/notifications':
+    parameters:
+      - name: id
+        in: path
+        type: integer
+        required: true
+        description: >-
+          The automatically generated Task id as returned by the Create Task
+          operation
+    get:
+      summary: List Registered Notifications
+      description: View only Notifications that are associated with a specific task.
+      tags:
+        - Notification
+      responses:
+        '200':
+          description: >-
+            Request could be handled successfully (even if there are no
+            notifications)
+          schema:
+            type: object
+            properties:
+              notifications_response:
+                type: object
+                properties:
+                  request_status:
+                    $ref: '#/definitions/RequestStatus'
+                  notifications:
+                    type: array
+                    items:
+                      $ref: '#/definitions/Notification'
+        '404':
+          description: the addressed Task does not exist
+          schema:
+            type: object
+            properties:
+              task_response:
+                type: object
+                properties:
+                  request_status:
+                    $ref: '#/definitions/RequestStatusError'
+  /customer/notifications:
+    get:
+      summary: List Registered Notifications
+      description: View all Notification instances that are associated with the customer.
+      tags:
+        - Notification
+      responses:
+        '200':
+          description: >-
+            Request could be handled successfully (even if there are no
+            notifications)
+          schema:
+            type: object
+            properties:
+              notifications_response:
+                type: object
+                properties:
+                  request_status:
+                    $ref: '#/definitions/RequestStatus'
+                  notifications:
+                    type: array
+                    items:
+                      $ref: '#/definitions/Notification'
+  '/customer/tasks/{id}/jobs':
+    parameters:
+      - name: id
+        in: path
+        type: integer
+        required: true
+        description: The auto-generated Job id.
+    get:
+      summary: Index Registered Jobs
+      description: Only view Jobs that are associated with a specific Task
+      tags:
+        - Job
+      responses:
+        '200':
+          description: Request could be handled successfully (even if there are no jobs)
+          schema:
+            type: object
+            properties:
+              jobs_response:
+                type: object
+                properties:
+                  request_status:
+                    $ref: '#/definitions/RequestStatus'
+                  jobs:
+                    type: array
+                    items:
+                      $ref: '#/definitions/PreviewJob'
+        '404':
+          description: the addressed Task does not exist
+          schema:
+            type: object
+            properties:
+              task_response:
+                type: object
+                properties:
+                  request_status:
+                    $ref: '#/definitions/RequestStatusError'
+  /customer/jobs:
+    get:
+      summary: Index Registered Jobs
+      description: View all Job instances that are assigned to a customer
+      tags:
+        - Job
+      responses:
+        '200':
+          description: Request could be handled successfully (even if there are no jobs)
+          schema:
+            type: object
+            properties:
+              jobs_response:
+                type: object
+                properties:
+                  request_status:
+                    $ref: '#/definitions/RequestStatus'
+                  jobs:
+                    type: array
+                    items:
+                      $ref: '#/definitions/PreviewJob'
+  '/customer/jobs/{id}':
+    parameters:
+      - name: id
+        in: path
+        type: integer
+        required: true
+        description: The auto-generated Job id.
+    get:
+      summary: Index Registered Jobs
+      description: Only view Jobs that are associated with a specific Task
+      tags:
+        - Job
+      responses:
+        '200':
+          description: the Job was found
+          schema:
+            type: object
+            properties:
+              jobs_response:
+                type: object
+                properties:
+                  request_status:
+                    $ref: '#/definitions/RequestStatus'
+                  job:
+                    $ref: '#/definitions/Job'
+        '404':
+          description: the Job was not found
+          schema:
+            type: object
+            properties:
+              task_response:
+                type: object
+                properties:
+                  request_status:
+                    $ref: '#/definitions/RequestStatusError'
+    put:
+      summary: Update Jobs
+      description: >-
+        To update a Job, the input attribute’s content must match the structure
+        of the embedded form.
+      tags:
+        - Job
+      parameters:
+        - name: job
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              input:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/definitions/Item'
+            required:
+              - input
+            example:
+              job:
+                input:
+                  items:
+                    - code: accepted
+                      content: '1'
+                    - code: grade_gr
+                      content: '2'
+      responses:
+        '200':
+          description: the request was successfully handled
+          schema:
+            type: object
+            properties:
+              jobs_response:
+                type: object
+                properties:
+                  request_status:
+                    $ref: '#/definitions/RequestStatus'
+                  job:
+                    $ref: '#/definitions/Job'
+        '404':
+          description: the Job was not found
+          schema:
+            type: object
+            properties:
+              task_response:
+                type: object
+                properties:
+                  request_status:
+                    $ref: '#/definitions/RequestStatusError'
+        '409':
+          description: >-
+            the input items provided by the customer do not match the form
+            definition
+          schema:
+            type: object
+            properties:
+              task_response:
+                type: object
+                properties:
+                  request_status:
+                    $ref: '#/definitions/RequestStatusError'
+  /customer/teams:
+    get:
+      summary: Index Teams
+      description: View all Teams that are assigned to a customer
+      tags:
+        - Team
+      responses:
+        '200':
+          description: Request could be handled successfully (even if there are no teams)
+          schema:
+            type: object
+            properties:
+              teams_response:
+                type: object
+                properties:
+                  request_status:
+                    $ref: '#/definitions/RequestStatus'
+                  teams:
+                    type: array
+                    items:
+                      $ref: '#/definitions/Team'
+    post:
+      summary: Create a new team
+      description: >
+        Teams allow to group clickworkers and include or exclude them from your
+        projects. Teams are typically used in the following scenarios:
+
+
+        * Excluding clickworkers that have already participated in a previous
+        survey.
+
+        * Only addressing specific clickworkers with a survey for follow up
+        surveys
+
+        * Excluding authors from your text project (blacklisting)
+
+        * Assigning text projects to a list of known authors that have worked
+        for you previously
+      tags:
+        - Team
+      parameters:
+        - name: team
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              name:
+                type: string
+              note:
+                type: string
+              hide:
+                type: boolean
+            required:
+              - name
+              - hide
+            example:
+              team:
+                name: My team
+                hide: false
+      responses:
+        '201':
+          description: the team was created successfully
+          schema:
+            type: object
+            properties:
+              team_response:
+                type: object
+                properties:
+                  request_status:
+                    $ref: '#/definitions/RequestStatus'
+                  team:
+                    $ref: '#/definitions/Team'
+  '/customer/teams/{id}':
+    parameters:
+      - name: id
+        in: path
+        type: integer
+        required: true
+        description: The auto-generated Job id.
+    put:
+      summary: Update a team
+      description: >-
+        To hide a team from marketplace drop down lists, use a PUT request to
+        set attribute "hide" into true.
+      tags:
+        - Team
+      parameters:
+        - name: team
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              name:
+                type: string
+              note:
+                type: string
+              hide:
+                type: boolean
+              add_user_ids:
+                type: array
+              remove_user_ids:
+                type: array
+            example:
+              team:
+                note: Some information about my team
+                hide: true
+                add_user_ids:
+                  - 1
+                  - 2
+                  - 3
+                remove_user_ids:
+                  - 4
+      responses:
+        '200':
+          description: the team was updated successfully
+          schema:
+            type: object
+            properties:
+              team_response:
+                type: object
+                properties:
+                  request_status:
+                    $ref: '#/definitions/RequestStatus'
+                  team:
+                    $ref: '#/definitions/Team'
+    delete:
+      summary: Permanently delete a team
+      tags:
+        - Team
+      responses:
+        '204':
+          description: The request could be successfully handled
+          schema:
+            type: object
+            properties:
+              team_response:
+                type: object
+                properties:
+                  request_status:
+                    $ref: '#/definitions/RequestStatus'
+        '404':
+          description: The given resource was not found
+          schema:
+            type: object
+            properties:
+              team_response:
+                type: object
+                properties:
+                  request_status:
+                    $ref: '#/definitions/RequestStatusError'
+definitions:
+  Customer:
+    type: object
+    properties:
+      reserved_amount:
+        type: string
+      balance_amount:
+        type: string
+      currency_code:
+        type: string
+      credit_limit:
+        type: string
+      link:
+        type: array
+        items:
+          $ref: '#/definitions/Link'
+  TaskTemplatePreview:
+    type: object
+    properties:
+      link:
+        type: array
+        items:
+          $ref: '#/definitions/Link'
+      name:
+        type: string
+      product:
+        type: object
+        properties:
+          link:
+            type: array
+            items:
+              $ref: '#/definitions/Link'
+      is_draft:
+        type: boolean
+  TaskTemplate:
+    description: >
+      In order to submit work to Clickworker through the API, the customer must
+      provide information on how his request is structured and in which form
+      results are expected back. For example, one customer might want to order a
+      text using our TextCreate product, which should be structured using a
+      title section and a content section, while another customer might need the
+      text to be structured using title, abstract, and content sections.
+
+
+      Similarly, one customer might provide a list of URLs of company websites
+      when using our product AddressResearch, while another customer might
+      supply the company name and address for verification using the
+      AddressResearch product.
+
+
+      TaskTemplates are used to define input and result structures, as well as
+      to specify additional parameters required to fulfill a task, such as the
+      target language for an article.
+
+      For each input and result field, additional options can be supplied to
+      control the presentation of each field. Constraints, such as whether a
+      field is optional or mandatory, can also be supplied.
+
+
+      To summarize, a Task Template serves multiple purposes:
+
+      * Select and configure an existing product by using its defined Product
+      Attributes.
+
+      * Define how Tasks are presented to the clickworker using Form Elements
+
+      * Select or exclude clickworkers from certain Tasks using Clickworker List
+      references.
+    type: object
+    properties:
+      link:
+        type: array
+        items:
+          $ref: '#/definitions/Link'
+      product:
+        type: object
+        properties:
+          link:
+            type: array
+            items:
+              $ref: '#/definitions/Link'
+          attributes:
+            type: array
+            items:
+              $ref: '#/definitions/Attribute'
+      form:
+        type: object
+        properties:
+          elements:
+            type: array
+            items:
+              $ref: '#/definitions/FormElement'
+  PreviewTask:
+    type: object
+    xml:
+      name: Task
+    properties:
+      link:
+        $ref: '#/definitions/Link'
+      customer_ref:
+        type: string
+        description: The customer may use this attribute to transport internal references.
+      state:
+        type: string
+        description: The current Task state. See section "Task States" for details.
+      template:
+        type: object
+        description: >-
+          The Task Template’s unique resource identifier. Contains a reference
+          to the selected product.
+        properties:
+          link:
+            $ref: '#/definitions/Link'
+          product:
+            type: object
+            properties:
+              link:
+                type: array
+                items:
+                  $ref: '#/definitions/Link'
+  Task:
+    description: >
+      A Task represents a specific work item (payload of work) to be processed
+      and delivered by clickworkers, such as a test to be written, or a single
+      address to be researched. Before a task can be submitted, a Task Template
+      must be defined, specifying the details of how the task should be
+      fulfilled. While the Task Template defines aspects that are common to all
+      Tasks (like selected product, input form, etc.) a Task carries the actual
+      payload. The Task’s data can roughly be separated into two sections:
+
+
+      1. Instructional data is the input presented to the clickworker (like text
+      to translate, keywords, instructions, etc.)
+
+      2. Result fields contain the final results of the task resolution (like
+      translated text, created text, research results)
+
+
+      #### Task Result Additions
+
+      The result attribute contains input that was created by clickworkers using
+      the Form Elements defined by the associated Task Template. In addition,
+      service and statistical information may be added by the system.
+    type: object
+    properties:
+      id:
+        type: integer
+        description: The Task identifier
+      href:
+        type: string
+        description: The Task’s unique resource identifier
+      customer_ref:
+        type: string
+        description: The customer may use this attribute to transport internal references.
+      order_id:
+        type: string
+        description: Each task is assigned to an order.
+      template:
+        type: object
+        description: >-
+          The Task Template’s unique resource identifier. Contains a reference
+          to the selected product.
+        properties:
+          link:
+            type: array
+            items:
+              $ref: '#/definitions/Link'
+      state:
+        type: string
+      product:
+        type: object
+        properties:
+          link:
+            type: array
+            items:
+              $ref: '#/definitions/Link'
+      amount:
+        type: number
+        format: float
+      link:
+        type: array
+        items:
+          $ref: '#/definitions/Link'
+      net_amount:
+        type: number
+        format: float
+      tax_amount:
+        type: number
+        format: float
+      currency:
+        type: string
+      input:
+        type: array
+        items:
+          $ref: '#/definitions/Item'
+      results:
+        type: array
+        items:
+          $ref: '#/definitions/Result'
+  PreviewJob:
+    type: object
+    properties:
+      link:
+        type: array
+        items:
+          $ref: '#/definitions/Link'
+      task:
+        type: array
+        items:
+          $ref: '#/definitions/Link'
+  Job:
+    description: >
+      Whenever the customer confirms a new task, it is accomplished based on a
+      predefined, product-specific workflow. The steps of this workflow are
+      called “Jobs.” This is illustrated by the following workflow, consisting
+      of three Jobs:
+
+
+      1. "create" performed by a clickworker writing a text according to a
+      task’s specifications
+
+      2. "review" performed by another clickworker who reviews the results of
+      the first job
+
+      3. "signoff" performed by the customer, who approves or declines the
+      results.
+
+
+      A task is completed when the entire workflow is completed. This occurs
+      when all jobs are finished.
+
+
+      Using the Marketplace API, customers can only see and manipulate jobs that
+      are assigned to them. Usually, these are jobs for signing off on the
+      results. The product details contain the relevant meta information about
+      the job’s input and results.
+    type: object
+    properties:
+      link:
+        type: array
+        items:
+          $ref: '#/definitions/Link'
+      id:
+        type: number
+      task:
+        type: array
+        items:
+          $ref: '#/definitions/Link'
+      items:
+        type: array
+        items:
+          $ref: '#/definitions/Item'
+  Team:
+    description: >
+      Teams allow to group clickworkers and include or exclude them from your
+      projects. Teams are typically used in the following scenarios:
+
+      * Excluding clickworkers that have already participated in a previous
+      survey.
+
+      * Only addressing specific clickworkers with a survey for follow up
+      surveys
+
+      * Excluding authors from your text project (blacklisting)
+
+      * Assigning text projects to a list of known authors that have worked for
+      you previously
+    type: object
+    properties:
+      id:
+        type: number
+      name:
+        type: string
+      note:
+        type: string
+      hide:
+        type: boolean
+  Bonus:
+    description: >
+      A customer has a way to make bonus payments to clickworkers. NOTE: 40% of
+      the amount will be added to the basic payment.
+    type: object
+    properties:
+      amount:
+        type: number
+        format: float
+      clickworker_id:
+        type: number
+        format: int32
+      comment:
+        type: string
+  Submit:
+    description: |
+      Results from formulars hosted on external servers.
+    type: object
+    properties:
+      id:
+        type: number
+        format: int32
+      clickworker_id:
+        type: number
+        format: int32
+  Accept:
+    description: |
+      Accept the results
+    type: object
+    properties:
+      id:
+        type: number
+        format: int32
+  Reject:
+    description: |
+      Reject the results
+    type: object
+    properties:
+      description:
+        type: string
+  Item:
+    type: object
+    properties:
+      code:
+        type: string
+      content:
+        type: string
+  Result:
+    type: object
+    properties:
+      code:
+        type: string
+      content:
+        type: string
+  Attribute:
+    type: object
+    properties:
+      code:
+        type: string
+      value:
+        type: string
+  FormElement:
+    type: object
+    properties:
+      type:
+        type: string
+      titles:
+        type: object
+        properties:
+          en:
+            type: string
+          de:
+            type: string
+      item_code:
+        type: string
+      is_output:
+        type: boolean
+      is_mandatory:
+        type: boolean
+  NotificationRegistration:
+    type: object
+    properties:
+      id:
+        type: integer
+        description: The Notification id
+      href:
+        type: string
+        description: The Notification unique resource identifier
+      event:
+        type: string
+        description: |
+          The symbolic event name. The following codes are defined:
+          * TASK_COMPLETED
+          * TASK_TIMEDOUT
+          * CUSTOMER_INPUT_REQUIRED
+      callback_url:
+        type: string
+        description: The callback URL
+      callback_method:
+        type: string
+        description: 'The HTTP method, one of GET or POST'
+      payload_format:
+        type: string
+        description: >
+          Payload format indicator, either XML or JSON. Only supported if method
+          is set to POST.
+
+          The actual payload will be a copy of the selected Task entity in the
+          requested format.
+  Notification:
+    type: object
+    properties:
+      link:
+        type: array
+        items:
+          $ref: '#/definitions/Link'
+      event:
+        type: string
+      callback_url:
+        type: string
+      callback_method:
+        type: string
+      payload_format:
+        type: string
+      author_id:
+        type: string
+      task_id:
+        type: string
+  RequestStatus:
+    type: object
+    properties:
+      id:
+        type: string
+        description: >-
+          A unique request id. Clients are encouraged to store this id for
+          support and debugging purposes.
+      status_code:
+        type: integer
+        description: The HTTP status code
+      status_text:
+        type: string
+        description: The equivalent HTTP status text
+      valid:
+        type: boolean
+        description: >-
+          Request validity indicator. true if the request could be processed
+          successfully
+      messages:
+        type: array
+        description: 'A list of additional messages, to provide more in-depth information'
+        items:
+          type: string
+      total_count:
+        type: integer
+        description: >-
+          Reports the total number of entities matching the request. Will be
+          zero for empty results.
+      page_num:
+        type: integer
+        description: >-
+          The current page in a paginated result. Page numbering starts at page
+          1, even if the result is empty (total_count is zero)
+      page_size:
+        type: integer
+        description: >-
+          The current page size in a paginated result. The default value is 50,
+          unless overridden by request parameter -_page_size.
+  RequestStatusError:
+    type: object
+    properties:
+      id:
+        type: string
+        description: >-
+          A unique request id. Clients are encouraged to store this id for
+          support and debugging purposes.
+      status_code:
+        type: integer
+        description: The HTTP status code
+      status_text:
+        type: string
+        description: The equivalent HTTP status text
+      valid:
+        type: boolean
+        description: >-
+          Request validity indicator. true if the request could be processed
+          successfully
+  Link:
+    type: object
+    properties:
+      type:
+        type: string
+        xml:
+          attribute: true
+      href:
+        type: string
+        xml:
+          attribute: true
+      rel:
+        type: string
+        xml:
+          attribute: true
+  Error:
+    type: object
+    properties:
+      code:
+        type: integer
+        format: int32
+      message:
+        type: string
+      fields:
+        type: string
