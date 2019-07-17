@@ -1,0 +1,160 @@
+{
+  "openapi" : "3.0.0",
+  "info" : {
+    "version" : "1.0.0",
+    "title" : "Clickworker Marketplace API",
+    "description" : " Clickworker's REST-based Web services allow customers to access the company's crowdsourcing services through an API and integrate them seamlessly into their applications."
+  },
+  "paths" : {
+    "/api/marketplace/v2/customer/teams" : {
+      "post" : {
+        "description" : "To create a new team you want to send POST request to /api/marketplace/v2/customer/teams, with specified XML body.\n",
+        "summary" : "Creating a new team",
+        "tags" : [ "Managing Clickworker Teams" ],
+        "requestBody" : {
+          "required" : true,
+          "content" : {
+            "application/xml" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/team"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "New team created"
+          }
+        }
+      },
+      "get" : {
+        "description" : "To retrieve all customer’s teams you want to send GET request to /api/marketplace/v2/customer/teams\n",
+        "summary" : "Listing teams of a customer",
+        "tags" : [ "Managing Clickworker Teams" ],
+        "responses" : {
+          "200" : {
+            "description" : "Success",
+            "content" : {
+              "application/xml" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/teams_response"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/marketplace/v2/customer/teams/{id}" : {
+      "delete" : {
+        "description" : "To permanently delete a team you want to send DELETE request to /api/marketplace/v2/customer/teams/{id} where <id> is an integer number – the Id of a team.",
+        "summary" : "Deleting a team",
+        "tags" : [ "Managing Clickworker Teams" ],
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "type" : "integer",
+            "description" : "The id of the team to be deleted"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Team successfully deleted"
+          }
+        }
+      },
+      "put" : {
+        "description" : "To hide a team from marketplace drop down lists, use a PUT request to /api/marketplace/v2/customer/teams/{id} and set attribute hide into true.\n\nYou may update the following attributes of a team:\n* \\<name> The team name\n* \\<note> Description of the team\n* \\<hide> show/hide team from lists\n",
+        "summary" : "Modifying a team",
+        "tags" : [ "Managing Clickworker Teams" ],
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "type" : "integer",
+            "description" : "The id of the team to be modified"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Team successfully modified"
+          }
+        }
+      }
+    }
+  },
+  "components" : {
+    "schemas" : {
+      "team" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "integer",
+            "description" : "Team ID identifier (in)"
+          },
+          "name" : {
+            "type" : "string",
+            "description" : "Team name"
+          },
+          "note" : {
+            "type" : "string",
+            "description" : "Any note (optional)"
+          },
+          "hide" : {
+            "type" : "boolean",
+            "description" : "Identifies that team is hidden (optional boolean attribute)",
+            "default" : false
+          }
+        }
+      },
+      "teams" : {
+        "type" : "array",
+        "items" : {
+          "type" : "object"
+        },
+        "example" : null
+      },
+      "teams_response" : {
+        "type" : "object",
+        "properties" : {
+          "request_status" : {
+            "type" : "object",
+            "properties" : {
+              "id" : {
+                "type" : "integer"
+              },
+              "valid" : {
+                "type" : "boolean"
+              },
+              "status_code" : {
+                "type" : "integer"
+              },
+              "status_text" : {
+                "type" : "string"
+              },
+              "total_count" : {
+                "type" : "integer"
+              },
+              "page_num" : {
+                "type" : "integer"
+              },
+              "page_size" : {
+                "type" : "integer"
+              }
+            }
+          },
+          "teams" : {
+            "$ref" : "#/components/schemas/teams"
+          }
+        }
+      }
+    }
+  },
+  "servers" : [ {
+    "description" : "SwaggerHub API Auto Mocking",
+    "url" : "https://virtserver.swaggerhub.com/Tura92/Concepts-API/1.0.0"
+  } ]
+}
