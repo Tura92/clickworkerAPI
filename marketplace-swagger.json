@@ -28,7 +28,7 @@
         }
       },
       "get" : {
-        "description" : "To retrieve all customer’s teams you want to send GET request to /api/marketplace/v2/customer/teams\n",
+        "description" : "To retrieve all customer’s teams you want to send GET request to /api/marketplace/v2/customer/teams. Response will look like the example:\n",
         "summary" : "Listing teams of a customer",
         "tags" : [ "Managing Clickworker Teams" ],
         "responses" : {
@@ -84,10 +84,70 @@
           }
         }
       }
+    },
+    "/api/marketplace/v2/customers/teams/{team_id}" : {
+      "put" : {
+        "description" : "To remove clickworkers from the team send a PUT request to /api/marketplace/v2/customer/teams/<team_id> with the following XML body:\n",
+        "summary" : "Adding clickworkers to a team",
+        "tags" : [ "Managing Clickworker Teams" ],
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "team_id",
+          "required" : true,
+          "schema" : {
+            "type" : "integer",
+            "description" : "The id of the team to add a user to"
+          }
+        } ],
+        "requestBody" : {
+          "required" : true,
+          "content" : {
+            "application/xml" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/team_adds_users"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Added users successfully"
+          }
+        }
+      }
     }
   },
   "components" : {
     "schemas" : {
+      "team_adds_users" : {
+        "type" : "object",
+        "xml" : {
+          "name" : "team"
+        },
+        "properties" : {
+          "user-i" : {
+            "xml" : {
+              "name" : "user"
+            },
+            "type" : "integer",
+            "example" : 4
+          },
+          "user-i+1" : {
+            "xml" : {
+              "name" : "user"
+            },
+            "type" : "integer",
+            "example" : 6
+          },
+          "user-i+2" : {
+            "xml" : {
+              "name" : "user"
+            },
+            "type" : "integer",
+            "example" : 9
+          }
+        }
+      },
       "team" : {
         "type" : "object",
         "properties" : {
@@ -110,13 +170,6 @@
           }
         }
       },
-      "teams" : {
-        "type" : "array",
-        "items" : {
-          "type" : "object"
-        },
-        "example" : null
-      },
       "teams_response" : {
         "type" : "object",
         "properties" : {
@@ -124,30 +177,66 @@
             "type" : "object",
             "properties" : {
               "id" : {
-                "type" : "integer"
+                "type" : "integer",
+                "example" : "wybSKEcLKGBNbd+LKX7zXIsvVJc"
               },
               "valid" : {
-                "type" : "boolean"
+                "type" : "boolean",
+                "example" : true
               },
               "status_code" : {
-                "type" : "integer"
+                "type" : "integer",
+                "example" : 200
               },
               "status_text" : {
-                "type" : "string"
+                "type" : "string",
+                "example" : "OK"
               },
               "total_count" : {
-                "type" : "integer"
+                "type" : "integer",
+                "example" : 5
               },
               "page_num" : {
-                "type" : "integer"
+                "type" : "integer",
+                "example" : 1
               },
               "page_size" : {
-                "type" : "integer"
+                "type" : "integer",
+                "example" : 50
               }
             }
           },
-          "teams" : {
-            "$ref" : "#/components/schemas/teams"
+          "team-i" : {
+            "type" : "object",
+            "xml" : {
+              "name" : "teams"
+            },
+            "properties" : {
+              "id" : {
+                "type" : "integer",
+                "example" : 12242
+              },
+              "name" : {
+                "type" : "string",
+                "example" : "Content Managers"
+              }
+            }
+          },
+          "team-i+1" : {
+            "type" : "object",
+            "xml" : {
+              "name" : "teams"
+            },
+            "properties" : {
+              "id" : {
+                "type" : "integer",
+                "example" : 232304
+              },
+              "name" : {
+                "type" : "string",
+                "example" : "Interpreters"
+              }
+            }
           }
         }
       }
