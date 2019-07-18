@@ -90,10 +90,10 @@
         }
       }
     },
-    "/customers/teams/{team_id}" : {
+    "/customer/teams/{team_id}" : {
       "put" : {
-        "description" : "To add clickworkers from the team send a PUT request to /api/marketplace/v2/customer/teams/<team_id> with the following XML body.\n\nadd_user_ids is a list (Array) of clickworkers users Ids that should be added to the team, e.g. [1,2,3,4]\n",
-        "summary" : "Adding clickworkers to a team",
+        "description" : "To add clickworkers from the team send a PUT request to /api/marketplace/v2/customer/teams/<team_id> with the following XML body.\n\nadd_user_ids is a list (Array) of clickworkers users Ids that should be added to the team, e.g. [1,2,3,4]\n\nTo remove clickworkers from the team send a PUT request to /api/marketplace/v2/customer/teams/<team_id> with the same body replacing the add_user_ids tag to remove_user_ids\n",
+        "summary" : "Adding/Removing clickworkers to/from a team",
         "tags" : [ "Managing Clickworker Teams" ],
         "parameters" : [ {
           "in" : "path",
@@ -111,7 +111,7 @@
               "schema" : {
                 "$ref" : "#/components/schemas/team_add_users"
               },
-              "example" : "<team> \n    <add_user_ids>[USER_ID]</add_user_ids> \n    <add_user_ids>[USER_ID]</add_user_ids> \n    <add_user_ids>[USER_ID]</add_user_ids>\n</team>"
+              "example" : "Adding users\n\n<team> \n    <add_user_ids>[USER_ID]</add_user_ids> \n    <add_user_ids>[USER_ID]</add_user_ids> \n    <add_user_ids>[USER_ID]</add_user_ids>\n</team>\n\nRemoving users\n\n<team> \n    <remove_user_ids>[USER_ID]</remove_user_ids> \n    <remove_user_ids>[USER_ID]</remove_user_ids> \n    <remove_user_ids>[USER_ID]</remove_user_ids>\n</team>"
             }
           }
         },
@@ -132,6 +132,9 @@
         },
         "properties" : {
           "add_user_ids" : {
+            "type" : "integer"
+          },
+          "remove_user_ids" : {
             "type" : "integer"
           }
         }
