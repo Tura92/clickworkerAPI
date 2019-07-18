@@ -19,15 +19,14 @@
                 },
                 "properties" : {
                   "id" : {
-                    "type" : "integer",
-                    "example" : 10
+                    "type" : "integer"
                   },
                   "name" : {
-                    "type" : "string",
-                    "example" : "lol"
+                    "type" : "string"
                   }
                 }
-              }
+              },
+              "example" : "<test></test>"
             }
           }
         },
