@@ -6,6 +6,37 @@
     "description" : " Clickworker's REST-based Web services allow customers to access the company's crowdsourcing services through an API and integrate them seamlessly into their applications."
   },
   "paths" : {
+    "/users" : {
+      "post" : {
+        "summary" : "Adds a new user",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "object",
+                "properties" : {
+                  "id" : {
+                    "type" : "integer"
+                  },
+                  "name" : {
+                    "type" : "string"
+                  }
+                },
+                "example" : {
+                  "id" : 10,
+                  "name" : "Jessica Smith"
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      }
+    },
     "/api/marketplace/v2/customer/teams" : {
       "post" : {
         "description" : "To create a new team you want to send POST request to /api/marketplace/v2/customer/teams, with specified XML body.\n",
@@ -46,32 +77,25 @@
                       "type" : "object",
                       "properties" : {
                         "id" : {
-                          "type" : "string",
-                          "example" : 1
+                          "type" : "string"
                         },
                         "valid" : {
-                          "type" : "boolean",
-                          "example" : true
+                          "type" : "boolean"
                         },
                         "status_code" : {
-                          "type" : "integer",
-                          "example" : 4
+                          "type" : "integer"
                         },
                         "status_text" : {
-                          "type" : "string",
-                          "example" : "test"
+                          "type" : "string"
                         },
                         "total_count" : {
-                          "type" : "integer",
-                          "example" : 6
+                          "type" : "integer"
                         },
                         "page_num" : {
-                          "type" : "integer",
-                          "example" : 5
+                          "type" : "integer"
                         },
                         "page_size" : {
-                          "type" : "integer",
-                          "example" : 1
+                          "type" : "integer"
                         }
                       }
                     },
@@ -82,12 +106,10 @@
                       },
                       "properties" : {
                         "id" : {
-                          "type" : "integer",
-                          "example" : 4
+                          "type" : "integer"
                         },
                         "name" : {
-                          "type" : "string",
-                          "example" : "rofl"
+                          "type" : "string"
                         }
                       }
                     },
@@ -98,16 +120,17 @@
                       },
                       "properties" : {
                         "id" : {
-                          "type" : "integer",
-                          "example" : 22
+                          "type" : "integer"
                         },
                         "name" : {
-                          "type" : "string",
-                          "example" : "works"
+                          "type" : "string"
                         }
                       }
                     }
                   }
+                },
+                "example" : {
+                  "id" : "fsdf"
                 }
               }
             }
