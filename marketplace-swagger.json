@@ -5,8 +5,13 @@
     "title" : "Clickworker Marketplace API",
     "description" : " Clickworker's REST-based Web services allow customers to access the company's crowdsourcing services through an API and integrate them seamlessly into their applications."
   },
-  "host" : "sandbox.clickworker.com",
-  "schemes" : [ "https" ],
+  "servers" : [ {
+    "description" : "SwaggerHub API Auto Mocking",
+    "url" : "https://virtserver.swaggerhub.com/Tura92/Concepts-API/1.0.0"
+  }, {
+    "description" : "Clickworker API",
+    "url" : "https://sandbox.clickworker.com/api/marketplace/v2"
+  } ],
   "paths" : {
     "/api/marketplace/v2/customer/teams" : {
       "post" : {
@@ -233,9 +238,5 @@
         }
       }
     }
-  },
-  "servers" : [ {
-    "description" : "SwaggerHub API Auto Mocking",
-    "url" : "https://virtserver.swaggerhub.com/Tura92/Concepts-API/1.0.0"
-  } ]
+  }
 }
