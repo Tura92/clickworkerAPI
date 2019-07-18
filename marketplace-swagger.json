@@ -37,13 +37,32 @@
             "content" : {
               "application/xml" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/teams_response",
-                  "example" : {
-                    "teams_response" : {
-                      "request_status" : {
-                        "id" : "wybSKEcLKGBNbd+LKX7zXIsvVJc",
-                        "valid" : true
-                      }
+                  "$ref" : "#/components/schemas/teams_response"
+                },
+                "example" : {
+                  "teams_response" : {
+                    "request_status" : {
+                      "id" : "wybSKEcLKGBNbd+LKX7zXIsvVJc",
+                      "valid" : true,
+                      "status_code" : 200,
+                      "status_text" : "OK",
+                      "total_count" : 5,
+                      "page_num" : 1,
+                      "page_size" : 50
+                    },
+                    "team1" : {
+                      "xml" : {
+                        "name" : "teams"
+                      },
+                      "id" : 12242,
+                      "name" : "Content Managers"
+                    },
+                    "team2" : {
+                      "xml" : {
+                        "name" : "teams"
+                      },
+                      "id" : 23220,
+                      "name" : "Interpreters"
                     }
                   }
                 }
