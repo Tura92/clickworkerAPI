@@ -37,7 +37,10 @@
             "content" : {
               "application/xml" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/teams_response"
+                  "$ref" : "#/components/schemas/teams_response",
+                  "example" : {
+                    "$ref" : "#/components/schemas/teams_response"
+                  }
                 }
               }
             }
@@ -178,31 +181,25 @@
             "properties" : {
               "id" : {
                 "type" : "integer",
-                "example" : "wybSKEcLKGBNbd+LKX7zXIsvVJc"
-              },
-              "valid" : {
-                "type" : "boolean",
-                "example" : true
-              },
-              "status_code" : {
-                "type" : "integer",
-                "example" : 200
-              },
-              "status_text" : {
-                "type" : "string",
-                "example" : "OK"
-              },
-              "total_count" : {
-                "type" : "integer",
                 "example" : 5
               },
+              "valid" : {
+                "type" : "boolean"
+              },
+              "status_code" : {
+                "type" : "integer"
+              },
+              "status_text" : {
+                "type" : "string"
+              },
+              "total_count" : {
+                "type" : "integer"
+              },
               "page_num" : {
-                "type" : "integer",
-                "example" : 1
+                "type" : "integer"
               },
               "page_size" : {
-                "type" : "integer",
-                "example" : 50
+                "type" : "integer"
               }
             }
           },
@@ -213,12 +210,10 @@
             },
             "properties" : {
               "id" : {
-                "type" : "integer",
-                "example" : 12242
+                "type" : "integer"
               },
               "name" : {
-                "type" : "string",
-                "example" : "Content Managers"
+                "type" : "string"
               }
             }
           },
@@ -229,12 +224,10 @@
             },
             "properties" : {
               "id" : {
-                "type" : "integer",
-                "example" : 232304
+                "type" : "integer"
               },
               "name" : {
-                "type" : "string",
-                "example" : "Interpreters"
+                "type" : "string"
               }
             }
           }
