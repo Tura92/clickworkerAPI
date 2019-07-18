@@ -39,7 +39,12 @@
                 "schema" : {
                   "$ref" : "#/components/schemas/teams_response",
                   "example" : {
-                    "$ref" : "#/components/schemas/teams_response"
+                    "teams_response" : {
+                      "request_status" : {
+                        "id" : "wybSKEcLKGBNbd+LKX7zXIsvVJc",
+                        "valid" : true
+                      }
+                    }
                   }
                 }
               }
@@ -180,8 +185,7 @@
             "type" : "object",
             "properties" : {
               "id" : {
-                "type" : "integer",
-                "example" : 5
+                "type" : "string"
               },
               "valid" : {
                 "type" : "boolean"
