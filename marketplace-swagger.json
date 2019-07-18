@@ -35,18 +35,70 @@
           "200" : {
             "description" : "Success",
             "content" : {
-              "application/xml" : {
+              "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/teams_response"
-                },
-                "example" : {
-                  "id" : "wybSKEcLKGBNbd+LKX7zXIsvVJc",
-                  "valid" : true,
-                  "status_code" : 200,
-                  "status_text" : "OK",
-                  "total_count" : 5,
-                  "page_num" : 1,
-                  "page_size" : 50
+                  "type" : "object",
+                  "properties" : {
+                    "teams_response" : {
+                      "type" : "object",
+                      "properties" : {
+                        "request_status" : {
+                          "type" : "object",
+                          "properties" : {
+                            "id" : {
+                              "type" : "string"
+                            },
+                            "valid" : {
+                              "type" : "boolean"
+                            },
+                            "status_code" : {
+                              "type" : "integer"
+                            },
+                            "status_text" : {
+                              "type" : "string"
+                            },
+                            "total_count" : {
+                              "type" : "integer"
+                            },
+                            "page_num" : {
+                              "type" : "integer"
+                            },
+                            "page_size" : {
+                              "type" : "integer"
+                            }
+                          }
+                        },
+                        "team-i" : {
+                          "type" : "object",
+                          "xml" : {
+                            "name" : "teams"
+                          },
+                          "properties" : {
+                            "id" : {
+                              "type" : "integer"
+                            },
+                            "name" : {
+                              "type" : "string"
+                            }
+                          }
+                        },
+                        "team-i+n" : {
+                          "type" : "object",
+                          "xml" : {
+                            "name" : "teams"
+                          },
+                          "properties" : {
+                            "id" : {
+                              "type" : "integer"
+                            },
+                            "name" : {
+                              "type" : "string"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
                 }
               }
             }
@@ -148,7 +200,7 @@
             "type" : "integer",
             "example" : 6
           },
-          "user-i+2" : {
+          "user-i+n" : {
             "xml" : {
               "name" : "user"
             },
@@ -222,7 +274,7 @@
               }
             }
           },
-          "team-i+1" : {
+          "team-i+n" : {
             "type" : "object",
             "xml" : {
               "name" : "teams"
