@@ -92,7 +92,7 @@
     },
     "/customers/teams/{team_id}" : {
       "put" : {
-        "description" : "To add clickworkers from the team send a PUT request to /api/marketplace/v2/customer/teams/<team_id> with the following XML body.\n\n<add_user_ids> is a list (Array) of clickworkers users Ids that should be added to the team, e.g. [1,2,3,4]\n",
+        "description" : "To add clickworkers from the team send a PUT request to /api/marketplace/v2/customer/teams/<team_id> with the following XML body.\n\n'<add_user_ids>' is a list (Array) of clickworkers users Ids that should be added to the team, e.g. [1,2,3,4]\n",
         "summary" : "Adding clickworkers to a team",
         "tags" : [ "Managing Clickworker Teams" ],
         "parameters" : [ {
