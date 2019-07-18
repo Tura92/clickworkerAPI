@@ -26,7 +26,7 @@
                   }
                 }
               },
-              "example" : "<test></test>"
+              "example" : "<test>\n  <lol></lol>\n</test>\n    "
             }
           }
         },
@@ -68,67 +68,9 @@
             "content" : {
               "application/xml" : {
                 "schema" : {
-                  "type" : "object",
-                  "xml" : {
-                    "name" : "teams_response"
-                  },
-                  "properties" : {
-                    "request_status" : {
-                      "type" : "object",
-                      "properties" : {
-                        "id" : {
-                          "type" : "string"
-                        },
-                        "valid" : {
-                          "type" : "boolean"
-                        },
-                        "status_code" : {
-                          "type" : "integer"
-                        },
-                        "status_text" : {
-                          "type" : "string"
-                        },
-                        "total_count" : {
-                          "type" : "integer"
-                        },
-                        "page_num" : {
-                          "type" : "integer"
-                        },
-                        "page_size" : {
-                          "type" : "integer"
-                        }
-                      }
-                    },
-                    "team-i" : {
-                      "type" : "object",
-                      "xml" : {
-                        "name" : "teams"
-                      },
-                      "properties" : {
-                        "id" : {
-                          "type" : "integer"
-                        },
-                        "name" : {
-                          "type" : "string"
-                        }
-                      }
-                    },
-                    "team-i+n" : {
-                      "type" : "object",
-                      "xml" : {
-                        "name" : "teams"
-                      },
-                      "properties" : {
-                        "id" : {
-                          "type" : "integer"
-                        },
-                        "name" : {
-                          "type" : "string"
-                        }
-                      }
-                    }
-                  }
-                }
+                  "$ref" : "#/components/schemas/teams_response"
+                },
+                "example" : "<teams_response> \n  <request_status>\n    <id>wybSKEcLKGBNbd+LKX7zXIsvVJc=</id> \n    <valid>true</valid> \n    <status_code>200</status_code> \n    <status_text>OK</status_text> \n    <total_count>5</total_count> \n    <page_num>1</page_num> \n    <page_size>50</page_size>\n  </request_status> \n  <teams>\n    <id>12242</id>\n    <name>Content Managers</name> \n  </teams>\n  <teams>\n    <id>232304</id> \n    <name>Interpreters</name>\n  </teams> \n</teams_response>"
               }
             }
           }
