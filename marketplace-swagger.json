@@ -11,9 +11,12 @@
         "summary" : "Adds a new user",
         "requestBody" : {
           "content" : {
-            "application/json" : {
+            "application/xml" : {
               "schema" : {
                 "type" : "object",
+                "xml" : {
+                  "name" : "user"
+                },
                 "properties" : {
                   "id" : {
                     "type" : "integer"
@@ -128,9 +131,6 @@
                       }
                     }
                   }
-                },
-                "example" : {
-                  "id" : "fsdf"
                 }
               }
             }
