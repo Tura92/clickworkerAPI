@@ -110,7 +110,8 @@
             "application/xml" : {
               "schema" : {
                 "$ref" : "#/components/schemas/team_adds_users"
-              }
+              },
+              "example" : "<team> \n    <add_user_ids>[USER_ID]</add_user_ids> \n    <add_user_ids>[USER_ID]</add_user_ids> \n    <add_user_ids>[USER_ID]</add_user_ids>\n</team>"
             }
           }
         },
@@ -130,32 +131,8 @@
           "name" : "team"
         },
         "properties" : {
-          "user_array_1" : {
-            "xml" : {
-              "name" : "add_user_ids"
-            },
-            "type" : "array",
-            "items" : {
-              "type" : "integer"
-            }
-          },
-          "user_array_2" : {
-            "xml" : {
-              "name" : "add_user_ids"
-            },
-            "type" : "array",
-            "items" : {
-              "type" : "integer"
-            }
-          },
-          "user_array_n" : {
-            "xml" : {
-              "name" : "add_user_ids"
-            },
-            "type" : "array",
-            "items" : {
-              "type" : "integer"
-            }
+          "add_user_ids" : {
+            "type" : "integer"
           }
         }
       },
