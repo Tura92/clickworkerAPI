@@ -35,66 +35,75 @@
           "200" : {
             "description" : "Success",
             "content" : {
-              "application/json" : {
+              "application/xml" : {
                 "schema" : {
                   "type" : "object",
+                  "xml" : {
+                    "name" : "teams_response"
+                  },
                   "properties" : {
-                    "teams_response" : {
+                    "request_status" : {
                       "type" : "object",
                       "properties" : {
-                        "request_status" : {
-                          "type" : "object",
-                          "properties" : {
-                            "id" : {
-                              "type" : "string"
-                            },
-                            "valid" : {
-                              "type" : "boolean"
-                            },
-                            "status_code" : {
-                              "type" : "integer"
-                            },
-                            "status_text" : {
-                              "type" : "string"
-                            },
-                            "total_count" : {
-                              "type" : "integer"
-                            },
-                            "page_num" : {
-                              "type" : "integer"
-                            },
-                            "page_size" : {
-                              "type" : "integer"
-                            }
-                          }
+                        "id" : {
+                          "type" : "string",
+                          "example" : 1
                         },
-                        "team-i" : {
-                          "type" : "object",
-                          "xml" : {
-                            "name" : "teams"
-                          },
-                          "properties" : {
-                            "id" : {
-                              "type" : "integer"
-                            },
-                            "name" : {
-                              "type" : "string"
-                            }
-                          }
+                        "valid" : {
+                          "type" : "boolean",
+                          "example" : true
                         },
-                        "team-i+n" : {
-                          "type" : "object",
-                          "xml" : {
-                            "name" : "teams"
-                          },
-                          "properties" : {
-                            "id" : {
-                              "type" : "integer"
-                            },
-                            "name" : {
-                              "type" : "string"
-                            }
-                          }
+                        "status_code" : {
+                          "type" : "integer",
+                          "example" : 4
+                        },
+                        "status_text" : {
+                          "type" : "string",
+                          "example" : "test"
+                        },
+                        "total_count" : {
+                          "type" : "integer",
+                          "example" : 6
+                        },
+                        "page_num" : {
+                          "type" : "integer",
+                          "example" : 5
+                        },
+                        "page_size" : {
+                          "type" : "integer",
+                          "example" : 1
+                        }
+                      }
+                    },
+                    "team-i" : {
+                      "type" : "object",
+                      "xml" : {
+                        "name" : "teams"
+                      },
+                      "properties" : {
+                        "id" : {
+                          "type" : "integer",
+                          "example" : 4
+                        },
+                        "name" : {
+                          "type" : "string",
+                          "example" : "rofl"
+                        }
+                      }
+                    },
+                    "team-i+n" : {
+                      "type" : "object",
+                      "xml" : {
+                        "name" : "teams"
+                      },
+                      "properties" : {
+                        "id" : {
+                          "type" : "integer",
+                          "example" : 22
+                        },
+                        "name" : {
+                          "type" : "string",
+                          "example" : "works"
                         }
                       }
                     }
