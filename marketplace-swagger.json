@@ -19,13 +19,14 @@
                 },
                 "properties" : {
                   "id" : {
-                    "type" : "integer"
+                    "type" : "integer",
+                    "example" : 10
                   },
                   "name" : {
-                    "type" : "string"
+                    "type" : "string",
+                    "example" : "lol"
                   }
-                },
-                "example" : "<user>\n  <id>10</id>\n  <name>Test>/name>\n</user>"
+                }
               }
             }
           }
