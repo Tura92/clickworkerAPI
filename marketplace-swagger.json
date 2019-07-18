@@ -10,7 +10,7 @@
     "url" : "https://sandbox.clickworker.com/api/marketplace/v2"
   } ],
   "paths" : {
-    "/api/marketplace/v2/customer/teams" : {
+    "/customer/teams" : {
       "post" : {
         "description" : "To create a new team you want to send POST request to /api/marketplace/v2/customer/teams, with specified XML body.\n",
         "summary" : "Creating a new team",
@@ -50,7 +50,7 @@
         }
       }
     },
-    "/api/marketplace/v2/customer/teams/{id}" : {
+    "/customer/teams/{id}" : {
       "delete" : {
         "description" : "To permanently delete a team you want to send DELETE request to /api/marketplace/v2/customer/teams/{id} where <id> is an integer number – the Id of a team.",
         "summary" : "Deleting a team",
@@ -90,7 +90,7 @@
         }
       }
     },
-    "/api/marketplace/v2/customers/teams/{team_id}" : {
+    "/customers/teams/{team_id}" : {
       "put" : {
         "description" : "To remove clickworkers from the team send a PUT request to /api/marketplace/v2/customer/teams/<team_id> with the following XML body:\n",
         "summary" : "Adding clickworkers to a team",
