@@ -92,7 +92,7 @@
     },
     "/customers/teams/{team_id}" : {
       "put" : {
-        "description" : "To remove clickworkers from the team send a PUT request to /api/marketplace/v2/customer/teams/<team_id> with the following XML body:\n",
+        "description" : "To add clickworkers from the team send a PUT request to /api/marketplace/v2/customer/teams/<team_id> with the following XML body:\n",
         "summary" : "Adding clickworkers to a team",
         "tags" : [ "Managing Clickworker Teams" ],
         "parameters" : [ {
@@ -130,26 +130,32 @@
           "name" : "team"
         },
         "properties" : {
-          "user-i" : {
+          "user_array_1" : {
             "xml" : {
               "name" : "user"
             },
-            "type" : "integer",
-            "example" : 4
+            "type" : "array",
+            "items" : {
+              "type" : "integer"
+            }
           },
-          "user-i+1" : {
+          "user_array_2" : {
             "xml" : {
               "name" : "user"
             },
-            "type" : "integer",
-            "example" : 6
+            "type" : "array",
+            "items" : {
+              "type" : "integer"
+            }
           },
-          "user-i+n" : {
+          "user_array_n" : {
             "xml" : {
               "name" : "user"
             },
-            "type" : "integer",
-            "example" : 9
+            "type" : "array",
+            "items" : {
+              "type" : "integer"
+            }
           }
         }
       },
