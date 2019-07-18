@@ -25,10 +25,7 @@
                     "type" : "string"
                   }
                 },
-                "example" : {
-                  "id" : 10,
-                  "name" : "Jessica Smith"
-                }
+                "example" : "<user>\n  <id>10</id>\n  <name>Test>/name>\n</user>"
               }
             }
           }
