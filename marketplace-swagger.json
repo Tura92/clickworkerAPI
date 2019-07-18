@@ -132,7 +132,7 @@
         "properties" : {
           "user_array_1" : {
             "xml" : {
-              "name" : "user"
+              "name" : "add_user_ids"
             },
             "type" : "array",
             "items" : {
@@ -141,7 +141,7 @@
           },
           "user_array_2" : {
             "xml" : {
-              "name" : "user"
+              "name" : "add_user_ids"
             },
             "type" : "array",
             "items" : {
@@ -150,7 +150,7 @@
           },
           "user_array_n" : {
             "xml" : {
-              "name" : "user"
+              "name" : "add_user_ids"
             },
             "type" : "array",
             "items" : {
