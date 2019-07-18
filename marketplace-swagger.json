@@ -109,7 +109,7 @@
           "content" : {
             "application/xml" : {
               "schema" : {
-                "$ref" : "#/components/schemas/team_adds_users"
+                "$ref" : "#/components/schemas/team_add_users"
               },
               "example" : "<team> \n    <add_user_ids>[USER_ID]</add_user_ids> \n    <add_user_ids>[USER_ID]</add_user_ids> \n    <add_user_ids>[USER_ID]</add_user_ids>\n</team>"
             }
@@ -125,7 +125,7 @@
   },
   "components" : {
     "schemas" : {
-      "team_adds_users" : {
+      "team_add_users" : {
         "type" : "object",
         "xml" : {
           "name" : "team"
