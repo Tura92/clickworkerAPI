@@ -5,38 +5,9 @@
     "title" : "Clickworker Marketplace API",
     "description" : " Clickworker's REST-based Web services allow customers to access the company's crowdsourcing services through an API and integrate them seamlessly into their applications."
   },
+  "host" : "sandbox.clickworker.com",
+  "schemes" : [ "https" ],
   "paths" : {
-    "/users" : {
-      "post" : {
-        "summary" : "Adds a new user",
-        "requestBody" : {
-          "content" : {
-            "application/xml" : {
-              "schema" : {
-                "type" : "object",
-                "xml" : {
-                  "name" : "user"
-                },
-                "properties" : {
-                  "id" : {
-                    "type" : "integer"
-                  },
-                  "name" : {
-                    "type" : "string"
-                  }
-                }
-              },
-              "example" : "<test>\n  <lol></lol>\n</test>\n    "
-            }
-          }
-        },
-        "responses" : {
-          "200" : {
-            "description" : "OK"
-          }
-        }
-      }
-    },
     "/api/marketplace/v2/customer/teams" : {
       "post" : {
         "description" : "To create a new team you want to send POST request to /api/marketplace/v2/customer/teams, with specified XML body.\n",
@@ -70,7 +41,7 @@
                 "schema" : {
                   "$ref" : "#/components/schemas/teams_response"
                 },
-                "example" : "<teams_response> \n  <request_status>\n    <id>wybSKEcLKGBNbd+LKX7zXIsvVJc=</id> \n    <valid>true</valid> \n    <status_code>200</status_code> \n    <status_text>OK</status_text> \n    <total_count>5</total_count> \n    <page_num>1</page_num> \n    <page_size>50</page_size>\n  </request_status> \n  <teams>\n    <id>12242</id>\n    <name>Content Managers</name> \n  </teams>\n  <teams>\n    <id>232304</id> \n    <name>Interpreters</name>\n  </teams> \n</teams_response>"
+                "example" : "<teams_response> \n    <request_status>\n        <id>wybSKEcLKGBNbd+LKX7zXIsvVJc=</id> \n        <valid>true</valid> \n        <status_code>200</status_code> \n        <status_text>OK</status_text> \n        <total_count>5</total_count> \n        <page_num>1</page_num> \n        <page_size>50</page_size>\n    </request_status> \n    <teams>\n        <id>12242</id>\n        <name>Content Managers</name> \n    </teams>\n    <teams>\n        <id>232304</id> \n        <name>Interpreters</name>\n    </teams> \n</teams_response>"
               }
             }
           }
