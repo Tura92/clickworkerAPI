@@ -7,7 +7,7 @@
   },
   "servers" : [ {
     "description" : "Clickworker API",
-    "url" : "https://sandbox.clickworker.com/api/marketplace/v2"
+    "url" : "https://sandbox.clickworker.com/api/marketplace/v2/test"
   } ],
   "paths" : {
     "/customer/teams" : {
