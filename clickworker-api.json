@@ -82,7 +82,7 @@
                     }
                   }
                 },
-                "example" : "<customer_response>\n    <request_status> [...] </request_status> \n    <customer>\n        <link href=“/api/marketplace/v2/customer” rel=”self” type=”application/xml” />\n        <balance> \n            <balance_amount>20000.00</balance_amount> \n            <reserved_amount>5000.00</reserved_amount> \n            <credit_limit>3000.00</credit_limit> \n            <currency_code>EUR</currency_code>\n            </balance> \n    </customer>\n</customer_response>"
+                "example" : "<customer_response>\n    <request_status> [...] </request_status> \n    <customer>\n        <link href=“/api/marketplace/v2/customer” rel=”self” type=”application/xml” />\n        <balance> \n            <balance_amount>20000.00</balance_amount> \n            <reserved_amount>5000.00</reserved_amount> \n            <credit_limit>3000.00</credit_limit> \n            <currency_code>EUR</currency_code>\n        </balance> \n    </customer>\n</customer_response>"
               }
             }
           },
@@ -91,6 +91,34 @@
           },
           "403" : {
             "description" : "The given credentials do not match a registered customer"
+          }
+        }
+      }
+    },
+    "/{context}/product" : {
+      "get" : {
+        "description" : "Displays a brief summary of each product. Note: This operation only lists products that are currently available. Deprecated products may still be accessed using their URI for reference in existing orders.",
+        "summary" : "List available product",
+        "tags" : [ "Product" ],
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "context",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "description" : "Product context"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "The request could be properly handled (even if no products were found)",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object"
+                }
+              }
+            }
           }
         }
       }
@@ -3272,6 +3300,17 @@
             "xml" : {
               "attribute" : true
             }
+          }
+        }
+      },
+      "Product" : {
+        "type" : "object",
+        "properties" : {
+          "link" : {
+            "$ref" : "#/components/schemas/Link"
+          },
+          "code" : {
+            "type" : "string"
           }
         }
       }
