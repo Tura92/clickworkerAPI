@@ -11,7 +11,7 @@
     "/{context}/customer" : {
       "get" : {
         "summary" : "User profile",
-        "description" : "Get the account information.\n",
+        "description" : "Account information is returned for the customer account, which authenticates using the request’s credentials. As a result, there is no customer id or name present in the URI.\n\n\n  Calling /customer without further information will print the customer’s account data.",
         "tags" : [ "Customer" ],
         "parameters" : [ {
           "in" : "path",
@@ -24,7 +24,7 @@
         } ],
         "responses" : {
           "200" : {
-            "description" : "The users profile information",
+            "description" : "The resource was found",
             "content" : {
               "application/json" : {
                 "schema" : {
