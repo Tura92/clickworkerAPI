@@ -1,0 +1,3280 @@
+{
+  "openapi" : "3.0.0",
+  "info" : {
+    "title" : "Clickworker API",
+    "version" : "1.0.0-oas3"
+  },
+  "security" : [ {
+    "basicAuth" : [ ]
+  } ],
+  "paths" : {
+    "/{context}/customer" : {
+      "get" : {
+        "summary" : "User profile",
+        "description" : "Get the account information.\n",
+        "tags" : [ "Customer" ],
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "context",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "description" : "Account information is returned for the customer account, which authenticats using the requests''s credentials"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "The users profile information",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "customer_response" : {
+                      "type" : "object",
+                      "properties" : {
+                        "request_status" : {
+                          "$ref" : "#/components/schemas/RequestStatus"
+                        },
+                        "customer" : {
+                          "$ref" : "#/components/schemas/Customer"
+                        }
+                      }
+                    }
+                  }
+                },
+                "example" : {
+                  "customer_response" : {
+                    "request_status" : null,
+                    "customer" : {
+                      "link" : [ {
+                        "href" : "/api/marketplace/v2/customer",
+                        "rel" : "self",
+                        "type" : "application/json"
+                      } ],
+                      "balance" : {
+                        "balance_amount" : "20000.00,",
+                        "reserved_amount" : "5000.00,",
+                        "credit_limit" : "3000.00,",
+                        "currency_code" : "EUR"
+                      }
+                    }
+                  }
+                }
+              },
+              "application/xml" : {
+                "schema" : {
+                  "type" : "object",
+                  "xml" : {
+                    "name" : "customer_response"
+                  },
+                  "properties" : {
+                    "customer_response" : {
+                      "type" : "object",
+                      "properties" : {
+                        "request_status" : {
+                          "$ref" : "#/components/schemas/RequestStatus"
+                        },
+                        "customer" : {
+                          "$ref" : "#/components/schemas/Customer"
+                        }
+                      }
+                    }
+                  }
+                },
+                "example" : "<customer_response>\n    <request_status> [...] </request_status> \n    <customer>\n        <link href=“/api/marketplace/v2/customer” rel=”self” type=”application/xml” />\n        <balance> \n            <balance_amount>20000.00</balance_amount> \n            <reserved_amount>5000.00</reserved_amount> \n            <credit_limit>3000.00</credit_limit> \n            <currency_code>EUR</currency_code>\n            </balance> \n    </customer>\n</customer_response>"
+              }
+            }
+          },
+          "401" : {
+            "description" : "The incoming request does not contain usable credentials"
+          },
+          "403" : {
+            "description" : "The given credentials do not match a registered customer"
+          }
+        }
+      }
+    },
+    "/customer/task_templates" : {
+      "get" : {
+        "summary" : "Index Registered Task Templates",
+        "description" : "Indexing registered Task Templates will produce a brief overview.\n",
+        "tags" : [ "TaskTemplate" ],
+        "responses" : {
+          "200" : {
+            "description" : "An array of task templates",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "task_templates_response" : {
+                      "type" : "object",
+                      "properties" : {
+                        "request_status" : {
+                          "$ref" : "#/components/schemas/RequestStatus"
+                        },
+                        "task_templates" : {
+                          "type" : "array",
+                          "items" : {
+                            "$ref" : "#/components/schemas/TaskTemplatePreview"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "application/xml" : {
+                "schema" : {
+                  "type" : "object",
+                  "xml" : {
+                    "name" : "tast_templates_response"
+                  },
+                  "properties" : {
+                    "task_templates_response" : {
+                      "type" : "object",
+                      "properties" : {
+                        "request_status" : {
+                          "$ref" : "#/components/schemas/RequestStatus"
+                        },
+                        "task_templates" : {
+                          "type" : "array",
+                          "items" : {
+                            "$ref" : "#/components/schemas/TaskTemplatePreview"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post" : {
+        "summary" : "Create a new Task Template",
+        "description" : "In order to submit work to Clickworker through the API, the customer must provide information on how his request is structured and in which form results are expected back. For example, one customer might want to order a text using our TextCreate product, which should be structured using a title section and a content section, while another customer might need the text to be structured using title, abstract, and content sections.\n\nSimilarly, one customer might provide a list of URLs of company websites when using our product AddressResearch, while another customer might supply the company name and address for verification using the AddressResearch product.\n\nTaskTemplates are used to define input and result structures, as well as to specify additional parameters required to fulfill a task, such as the target language for an article.\n\nFor each input and result field, additional options can be supplied to control the presentation of each field. Constraints, such as whether a field is optional or mandatory, can also be supplied.\n\nTo summarize, a Task Template serves multiple purposes:\n* Select and configure an existing product by using its defined Product Attributes.\n* Define how Tasks are presented to the clickworker using Form Elements\n* Select or exclude clickworkers from certain Tasks using Clickworker List references.\n",
+        "tags" : [ "TaskTemplate" ],
+        "responses" : {
+          "200" : {
+            "description" : "the Task Template was successfully created",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "task_response" : {
+                      "type" : "object",
+                      "properties" : {
+                        "request_status" : {
+                          "$ref" : "#/components/schemas/RequestStatus"
+                        },
+                        "task" : {
+                          "$ref" : "#/components/schemas/TaskTemplate"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "application/xml" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "task_response" : {
+                      "type" : "object",
+                      "properties" : {
+                        "request_status" : {
+                          "$ref" : "#/components/schemas/RequestStatus"
+                        },
+                        "task" : {
+                          "$ref" : "#/components/schemas/TaskTemplate"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409" : {
+            "description" : "a Task Template of the given code already exists",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "task_response" : {
+                      "type" : "object",
+                      "properties" : {
+                        "request_status" : {
+                          "$ref" : "#/components/schemas/RequestStatusError"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "application/xml" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "task_response" : {
+                      "type" : "object",
+                      "properties" : {
+                        "request_status" : {
+                          "$ref" : "#/components/schemas/RequestStatusError"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "object",
+                "properties" : {
+                  "code" : {
+                    "type" : "string",
+                    "description" : "The symbolic Task Template code"
+                  },
+                  "name" : {
+                    "type" : "string",
+                    "description" : "A short text helping the customer identify the purpose of the Template"
+                  },
+                  "titles" : {
+                    "type" : "object",
+                    "description" : "A short text used when presenting tasks to clickworkers (either as a list or in detail)",
+                    "properties" : {
+                      "en" : {
+                        "type" : "string"
+                      },
+                      "de" : {
+                        "type" : "string"
+                      }
+                    }
+                  },
+                  "descriptions" : {
+                    "type" : "object",
+                    "description" : "A more extensive text containing a task summary that is presented to the clickworker.",
+                    "properties" : {
+                      "en" : {
+                        "type" : "string"
+                      },
+                      "de" : {
+                        "type" : "string"
+                      }
+                    }
+                  },
+                  "product" : {
+                    "type" : "object",
+                    "properties" : {
+                      "link" : {
+                        "type" : "array",
+                        "items" : {
+                          "$ref" : "#/components/schemas/Link"
+                        }
+                      },
+                      "attributes" : {
+                        "type" : "array",
+                        "items" : {
+                          "$ref" : "#/components/schemas/Attribute"
+                        }
+                      }
+                    }
+                  },
+                  "form" : {
+                    "type" : "object",
+                    "properties" : {
+                      "elements" : {
+                        "type" : "array",
+                        "items" : {
+                          "$ref" : "#/components/schemas/FormElement"
+                        }
+                      }
+                    }
+                  }
+                },
+                "xml" : {
+                  "name" : "task_template"
+                },
+                "example" : {
+                  "task_template" : {
+                    "code" : "tpl_text_create_keywords_en",
+                    "name" : "Standard Text Creation Template (English)",
+                    "titles" : {
+                      "en" : "Please write a message with keywords"
+                    },
+                    "descriptions" : {
+                      "en" : "You are required to write a short English message, containing at least 50 words, with a keyword in it."
+                    },
+                    "product" : {
+                      "link" : [ {
+                        "href" : "/api/marketplace/v2/products/TextCreateWithKeywords",
+                        "rel" : "product",
+                        "type" : "application/json"
+                      } ],
+                      "attributes" : [ {
+                        "code" : "textcreatewithkeywords_language",
+                        "value" : "en"
+                      }, {
+                        "code" : "textcreatewithkeywords_text_length",
+                        "value" : "10#55"
+                      }, {
+                        "code" : "textcreatewithkeywords_proof_read",
+                        "value" : "textcreate_proof_no"
+                      } ]
+                    },
+                    "form" : {
+                      "elements" : [ {
+                        "type" : "text_field",
+                        "titles" : {
+                          "en" : "Topic"
+                        },
+                        "item_code" : "topic",
+                        "is_output" : false
+                      } ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "required" : true
+        }
+      }
+    },
+    "/customer/task_templates/{code}" : {
+      "parameters" : [ {
+        "name" : "code",
+        "in" : "path",
+        "required" : true,
+        "description" : "The Task Templates code as defined by the customer at the time of creation",
+        "schema" : {
+          "type" : "string"
+        }
+      } ],
+      "get" : {
+        "summary" : "View Task Template Details",
+        "tags" : [ "TaskTemplate" ],
+        "responses" : {
+          "200" : {
+            "description" : "the request was successfully handled",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "task_template_response" : {
+                      "type" : "object",
+                      "properties" : {
+                        "request_status" : {
+                          "$ref" : "#/components/schemas/RequestStatus"
+                        },
+                        "task_template" : {
+                          "$ref" : "#/components/schemas/TaskTemplate"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "application/xml" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "task_template_response" : {
+                      "type" : "object",
+                      "properties" : {
+                        "request_status" : {
+                          "$ref" : "#/components/schemas/RequestStatus"
+                        },
+                        "task_template" : {
+                          "$ref" : "#/components/schemas/TaskTemplate"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "the addressed Task Template does not exist",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "task_response" : {
+                      "type" : "object",
+                      "properties" : {
+                        "request_status" : {
+                          "$ref" : "#/components/schemas/RequestStatusError"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "application/xml" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "task_response" : {
+                      "type" : "object",
+                      "properties" : {
+                        "request_status" : {
+                          "$ref" : "#/components/schemas/RequestStatusError"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/customer/task_templates/{code}/blacklist" : {
+      "put" : {
+        "summary" : "Add clickworkers to blacklist. Valid_until is optional.",
+        "tags" : [ "TaskTemplate" ],
+        "parameters" : [ {
+          "name" : "code",
+          "in" : "path",
+          "required" : true,
+          "description" : "The Task Templates code as defined by the customer at the time of creation",
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Response",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "blacklist_response" : {
+                      "type" : "object",
+                      "properties" : {
+                        "request_status" : {
+                          "$ref" : "#/components/schemas/RequestStatus"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "application/xml" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "blacklist_response" : {
+                      "type" : "object",
+                      "properties" : {
+                        "request_status" : {
+                          "$ref" : "#/components/schemas/RequestStatus"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "object",
+                "properties" : {
+                  "clickworker_ids" : {
+                    "type" : "array",
+                    "items" : {
+                      "type" : "integer"
+                    }
+                  },
+                  "valid_until" : {
+                    "type" : "string"
+                  }
+                },
+                "required" : [ "clickworker_ids" ],
+                "example" : {
+                  "blacklist" : {
+                    "clickworker_ids" : [ 1, 2, 3 ],
+                    "valid_until" : "2016-08-13 00:00:00"
+                  }
+                }
+              }
+            }
+          },
+          "required" : true
+        }
+      }
+    },
+    "/customer/tasks" : {
+      "get" : {
+        "summary" : "List Tasks",
+        "description" : "##### Task States\nThe Task State indicates the current status of the Task. It is derived from a more extensive set of internal states but mapped to the following “public” states:\n\n| State       | Description |\n|-------------|----------|\n| Unconfirmed | The task has been created but needs to be confirmed by the customer.   |\n| Confirmed   | The task has been confirmed by the customer and is ready for queuing. |\n| Queued      | The task is waiting for clickworkers to apply for the associated jobs. |\n| Running     | Clickworkers are currently working on the task’s jobs. |\n| Cancelled   | The task has been cancelled by the customer. |\n| Feedback    | The task requires feedback – such as a buyoff by the customer. |\n| Finished    | The task is finished and contains the result data. |\n| Deleted     | The task has been marked as deleted and will not be listed in index requests any more. However, it is still available as long as it is referenced by other entities, likes Jobs or Notifications. |\n",
+        "tags" : [ "Task" ],
+        "parameters" : [ {
+          "name" : "state",
+          "in" : "query",
+          "required" : false,
+          "description" : "Filters tasks by specified state. List of possible values, see above.",
+          "schema" : {
+            "type" : "string",
+            "enum" : [ "Unconfirmed", "Confirmed", "Queued", "Running", "Cancelled", "Feedback", "Finished", "Deleted" ]
+          }
+        }, {
+          "name" : "from",
+          "in" : "query",
+          "required" : false,
+          "description" : "Filters tasks by created_at attribute from specified date. Expected format is dd.mm.yyyy",
+          "schema" : {
+            "type" : "string",
+            "default" : ""
+          }
+        }, {
+          "name" : "to",
+          "in" : "query",
+          "required" : false,
+          "description" : "Filters finished task by created_at attribute to specified date. Expected format is dd.mm.yyyy",
+          "schema" : {
+            "type" : "string",
+            "default" : ""
+          }
+        }, {
+          "name" : "finished_from",
+          "in" : "query",
+          "required" : false,
+          "description" : "Filters finished tasks by finished_at attribute from specified date. Expected format is dd.mm.yyyy",
+          "schema" : {
+            "type" : "string",
+            "default" : ""
+          }
+        }, {
+          "name" : "finished_to",
+          "in" : "query",
+          "required" : false,
+          "description" : "Filters finished task by created_at attribute to specified date. Expected format is dd.mm.yyyy",
+          "schema" : {
+            "type" : "string",
+            "default" : ""
+          }
+        }, {
+          "name" : "order_id",
+          "in" : "query",
+          "required" : false,
+          "description" : "If you are using different projects under one account, these are separated by an order_id. On task creation the order id is returned.",
+          "schema" : {
+            "type" : "string",
+            "default" : ""
+          }
+        }, {
+          "$ref" : "#/components/parameters/_page_size"
+        }, {
+          "$ref" : "#/components/parameters/_page_number"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "The request could be successfully handled (even if no tasks were found)",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "task_response" : {
+                      "type" : "object",
+                      "properties" : {
+                        "request_status" : {
+                          "$ref" : "#/components/schemas/RequestStatus"
+                        },
+                        "tasks" : {
+                          "type" : "array",
+                          "items" : {
+                            "$ref" : "#/components/schemas/PreviewTask"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "application/xml" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "task_response" : {
+                      "type" : "object",
+                      "properties" : {
+                        "request_status" : {
+                          "$ref" : "#/components/schemas/RequestStatus"
+                        },
+                        "tasks" : {
+                          "type" : "array",
+                          "items" : {
+                            "$ref" : "#/components/schemas/PreviewTask"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post" : {
+        "summary" : "Create Task",
+        "description" : "A customer makes new work available by creating a task. Tasks are automatically confirmed and distributed to the crowd for resolution.\n\nCustomers can choose to receive notifications upon task completion.\nNotifications are callbacks to the customer’s system that keep customers informed of certain events related to a specific task. Notifications for the following events can be configured:\n* TASK_COMPLETED: This event is triggered when all work related to the task, including the customer’s review, has been completed.\n* TASK_TIMEDOUT: This event is triggered when the maximum duration or due date for the task has elapsed and the task has not been completed.\n* CUSTOMER_INPUT_REQUIRED: This event is triggered when additional input is required from the customer, such as approval of an article.\n\nThe Notification sent to the given “callback url” will contain the following information:\n1. The event code, as described above\n2. The URI of the task that triggered the event\nIf callback_method was set to POST, the Notification payload will be the only element in the body of the request. If the method was set to GET, the notification will be a URL- compliant serialization of the data and become the value of a query string parameter named “payload”.\n\nPlease note that because of URL length restrictions, the use of the POST method is highly recommended!\n",
+        "tags" : [ "Task" ],
+        "responses" : {
+          "201" : {
+            "description" : "The task has successfully been created",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "task_response" : {
+                      "type" : "object",
+                      "properties" : {
+                        "request_status" : {
+                          "$ref" : "#/components/schemas/RequestStatus"
+                        },
+                        "task" : {
+                          "$ref" : "#/components/schemas/Task"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "application/xml" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "task_response" : {
+                      "type" : "object",
+                      "properties" : {
+                        "request_status" : {
+                          "$ref" : "#/components/schemas/RequestStatus"
+                        },
+                        "task" : {
+                          "$ref" : "#/components/schemas/Task"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "The referenced Task Template does not exist",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "task_response" : {
+                      "type" : "object",
+                      "properties" : {
+                        "request_status" : {
+                          "$ref" : "#/components/schemas/RequestStatusError"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "application/xml" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "task_response" : {
+                      "type" : "object",
+                      "properties" : {
+                        "request_status" : {
+                          "$ref" : "#/components/schemas/RequestStatusError"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "object",
+                "properties" : {
+                  "customer_ref" : {
+                    "type" : "string"
+                  },
+                  "template" : {
+                    "type" : "object",
+                    "properties" : {
+                      "link" : {
+                        "type" : "array",
+                        "items" : {
+                          "$ref" : "#/components/schemas/Link"
+                        }
+                      }
+                    }
+                  },
+                  "notifications" : {
+                    "type" : "array",
+                    "items" : {
+                      "$ref" : "#/components/schemas/NotificationRegistration"
+                    }
+                  }
+                },
+                "required" : [ "template" ],
+                "example" : {
+                  "task" : {
+                    "customer_ref" : "1234",
+                    "template" : {
+                      "link" : {
+                        "href" : "/api/marketplace/v2/customer/task_templates/my_template"
+                      }
+                    },
+                    "input" : {
+                      "items" : [ {
+                        "code" : "product_name",
+                        "content" : "Chair"
+                      }, {
+                        "code" : "attributes",
+                        "content" : "Wood"
+                      } ]
+                    },
+                    "notifications" : [ {
+                      "event" : "CUSTOMER_INPUT_REQUIRED",
+                      "callback_url" : "http://notification.example.com",
+                      "callback_method" : "POST",
+                      "payload_format" : "JSON"
+                    }, {
+                      "event" : "TASK_COMPLETED",
+                      "callback_url" : "http://notification.example.com",
+                      "callback_method" : "POST",
+                      "payload_format" : "JSON"
+                    } ]
+                  }
+                }
+              }
+            }
+          },
+          "required" : true
+        }
+      }
+    },
+    "/customer/tasks/search" : {
+      "get" : {
+        "summary" : "Search Tasks by Customer Reference",
+        "tags" : [ "Task" ],
+        "parameters" : [ {
+          "name" : "customer_ref",
+          "in" : "query",
+          "required" : false,
+          "description" : "Filters tasks by specified No customer_reference. If parameter is not specified, it filters tasks by customer_reference = NULL",
+          "schema" : {
+            "type" : "string",
+            "default" : ""
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "The request could be successfully handled (even if no tasks were found)",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "task_response" : {
+                      "type" : "object",
+                      "properties" : {
+                        "request_status" : {
+                          "$ref" : "#/components/schemas/RequestStatus"
+                        },
+                        "tasks" : {
+                          "type" : "array",
+                          "items" : {
+                            "$ref" : "#/components/schemas/PreviewTask"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "application/xml" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "task_response" : {
+                      "type" : "object",
+                      "properties" : {
+                        "request_status" : {
+                          "$ref" : "#/components/schemas/RequestStatus"
+                        },
+                        "tasks" : {
+                          "type" : "array",
+                          "items" : {
+                            "$ref" : "#/components/schemas/PreviewTask"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/customer/tasks/{id}" : {
+      "parameters" : [ {
+        "name" : "id",
+        "in" : "path",
+        "required" : true,
+        "description" : "The automatically generated Task id as returned by the Create Task operation",
+        "schema" : {
+          "type" : "integer"
+        }
+      } ],
+      "get" : {
+        "summary" : "View Task Details",
+        "tags" : [ "Task" ],
+        "parameters" : [ {
+          "name" : "show_cloned_task",
+          "in" : "query",
+          "required" : false,
+          "description" : "If is true and the the task has cloned task, than the data of the cloned task will be shown.",
+          "schema" : {
+            "type" : "boolean"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "The requested resource was found",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "task_response" : {
+                      "type" : "object",
+                      "properties" : {
+                        "request_status" : {
+                          "$ref" : "#/components/schemas/RequestStatus"
+                        },
+                        "task" : {
+                          "$ref" : "#/components/schemas/Task"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "application/xml" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "task_response" : {
+                      "type" : "object",
+                      "properties" : {
+                        "request_status" : {
+                          "$ref" : "#/components/schemas/RequestStatus"
+                        },
+                        "task" : {
+                          "$ref" : "#/components/schemas/Task"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "The requested resource was not found or the given customer id is not associated with the detected credentials",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "task_response" : {
+                      "type" : "object",
+                      "properties" : {
+                        "request_status" : {
+                          "$ref" : "#/components/schemas/RequestStatusError"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "application/xml" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "task_response" : {
+                      "type" : "object",
+                      "properties" : {
+                        "request_status" : {
+                          "$ref" : "#/components/schemas/RequestStatusError"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete" : {
+        "summary" : "Delete a task",
+        "tags" : [ "Task" ],
+        "responses" : {
+          "204" : {
+            "description" : "The request could be successfully handled",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "task_response" : {
+                      "type" : "object",
+                      "properties" : {
+                        "request_status" : {
+                          "$ref" : "#/components/schemas/RequestStatus"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "application/xml" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "task_response" : {
+                      "type" : "object",
+                      "properties" : {
+                        "request_status" : {
+                          "$ref" : "#/components/schemas/RequestStatus"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "The given resource was not found",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "task_response" : {
+                      "type" : "object",
+                      "properties" : {
+                        "request_status" : {
+                          "$ref" : "#/components/schemas/RequestStatusError"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "application/xml" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "task_response" : {
+                      "type" : "object",
+                      "properties" : {
+                        "request_status" : {
+                          "$ref" : "#/components/schemas/RequestStatusError"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409" : {
+            "description" : "The task could not be deleted",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "task_response" : {
+                      "type" : "object",
+                      "properties" : {
+                        "request_status" : {
+                          "$ref" : "#/components/schemas/RequestStatusError"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "application/xml" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "task_response" : {
+                      "type" : "object",
+                      "properties" : {
+                        "request_status" : {
+                          "$ref" : "#/components/schemas/RequestStatusError"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/customer/tasks/{id}/external_submit" : {
+      "parameters" : [ {
+        "name" : "id",
+        "in" : "path",
+        "required" : true,
+        "description" : "The automatically generated Task id as returned by the Create Task operation",
+        "schema" : {
+          "type" : "integer"
+        }
+      } ],
+      "post" : {
+        "summary" : "Submit task results from an external form (used for iframe tasks)",
+        "description" : "When the task-form is hosted on your platform, we need a way to know when the clickworker has finished the task. As soon as the clickworker saves the form on the external platform, you should call this endpoint to let us know about the submit.\n",
+        "tags" : [ "Task" ],
+        "responses" : {
+          "201" : {
+            "description" : "the Task was created successfully",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "external_submit_response" : {
+                      "type" : "object",
+                      "properties" : {
+                        "request_status" : {
+                          "$ref" : "#/components/schemas/RequestStatus"
+                        },
+                        "external_submit" : {
+                          "$ref" : "#/components/schemas/Submit"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "application/xml" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "external_submit_response" : {
+                      "type" : "object",
+                      "properties" : {
+                        "request_status" : {
+                          "$ref" : "#/components/schemas/RequestStatus"
+                        },
+                        "external_submit" : {
+                          "$ref" : "#/components/schemas/Submit"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "the addressed Task does not exist",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "external_submit_response" : {
+                      "type" : "object",
+                      "properties" : {
+                        "request_status" : {
+                          "$ref" : "#/components/schemas/RequestStatusError"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "application/xml" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "external_submit_response" : {
+                      "type" : "object",
+                      "properties" : {
+                        "request_status" : {
+                          "$ref" : "#/components/schemas/RequestStatusError"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "object",
+                "properties" : {
+                  "clickworker_id" : {
+                    "type" : "number",
+                    "format" : "int32"
+                  }
+                },
+                "required" : [ "clickworker_id" ],
+                "example" : {
+                  "submit" : {
+                    "clickworker_id" : 2
+                  }
+                }
+              }
+            }
+          },
+          "required" : true
+        }
+      }
+    },
+    "/customer/tasks/{id}/external_submit/{job_id}" : {
+      "parameters" : [ {
+        "name" : "id",
+        "in" : "path",
+        "required" : true,
+        "description" : "The automatically generated Task id as returned by the Create Task operation",
+        "schema" : {
+          "type" : "integer"
+        }
+      } ],
+      "post" : {
+        "summary" : "Submit task results from an external form of a specific job (used for iframe tasks)",
+        "description" : "When the task-form is hosted on your platform, we need a way to know when the clickworker has finished the task. As soon as the clickworker saves the form on the external platform, you should call this endpoint to let us know about the submit.\n",
+        "tags" : [ "Task" ],
+        "parameters" : [ {
+          "name" : "job_id",
+          "in" : "path",
+          "required" : true,
+          "description" : "The automatically generated Job id which belongs to the current Task.",
+          "schema" : {
+            "type" : "integer"
+          }
+        } ],
+        "responses" : {
+          "201" : {
+            "description" : "the Task was created successfully",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "external_submit_response" : {
+                      "type" : "object",
+                      "properties" : {
+                        "request_status" : {
+                          "$ref" : "#/components/schemas/RequestStatus"
+                        },
+                        "external_submit" : {
+                          "$ref" : "#/components/schemas/Submit"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "application/xml" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "external_submit_response" : {
+                      "type" : "object",
+                      "properties" : {
+                        "request_status" : {
+                          "$ref" : "#/components/schemas/RequestStatus"
+                        },
+                        "external_submit" : {
+                          "$ref" : "#/components/schemas/Submit"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "the addressed Task or Job does not exist",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "external_submit_response" : {
+                      "type" : "object",
+                      "properties" : {
+                        "request_status" : {
+                          "$ref" : "#/components/schemas/RequestStatusError"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "application/xml" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "external_submit_response" : {
+                      "type" : "object",
+                      "properties" : {
+                        "request_status" : {
+                          "$ref" : "#/components/schemas/RequestStatusError"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/customer/tasks/{id}/accept" : {
+      "parameters" : [ {
+        "name" : "id",
+        "in" : "path",
+        "required" : true,
+        "description" : "The automatically generated Task id as returned by the Create Task operation",
+        "schema" : {
+          "type" : "integer"
+        }
+      } ],
+      "put" : {
+        "summary" : "Accept the results of this task (used for iframe tasks)",
+        "description" : "Accept the results of this task. You can add an optional description.\n",
+        "tags" : [ "Task" ],
+        "responses" : {
+          "201" : {
+            "description" : "the Task was accepted successfully",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "accept_response" : {
+                      "type" : "object",
+                      "properties" : {
+                        "request_status" : {
+                          "$ref" : "#/components/schemas/RequestStatus"
+                        },
+                        "accept" : {
+                          "$ref" : "#/components/schemas/Accept"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "application/xml" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "accept_response" : {
+                      "type" : "object",
+                      "properties" : {
+                        "request_status" : {
+                          "$ref" : "#/components/schemas/RequestStatus"
+                        },
+                        "accept" : {
+                          "$ref" : "#/components/schemas/Accept"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "the addressed Task does not exist",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "accept_response" : {
+                      "type" : "object",
+                      "properties" : {
+                        "request_status" : {
+                          "$ref" : "#/components/schemas/RequestStatusError"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "application/xml" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "accept_response" : {
+                      "type" : "object",
+                      "properties" : {
+                        "request_status" : {
+                          "$ref" : "#/components/schemas/RequestStatusError"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "requestBody" : {
+          "$ref" : "#/components/requestBodies/Accept"
+        }
+      }
+    },
+    "/customer/tasks/{id}/accept/{job_id}" : {
+      "parameters" : [ {
+        "name" : "id",
+        "in" : "path",
+        "required" : true,
+        "description" : "The automatically generated Task id as returned by the Create Task operation",
+        "schema" : {
+          "type" : "integer"
+        }
+      }, {
+        "name" : "job_id",
+        "in" : "path",
+        "required" : true,
+        "description" : "The automatically generated Job id which belongs to the current Task.",
+        "schema" : {
+          "type" : "integer"
+        }
+      } ],
+      "put" : {
+        "summary" : "Accept the results of a job of this task (used for iframe tasks)",
+        "description" : "Accept the results of a job of this task. You can add an optional description.\n",
+        "tags" : [ "Task" ],
+        "responses" : {
+          "201" : {
+            "description" : "the Task was accepted successfully",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "accept_response" : {
+                      "type" : "object",
+                      "properties" : {
+                        "request_status" : {
+                          "$ref" : "#/components/schemas/RequestStatus"
+                        },
+                        "accept" : {
+                          "$ref" : "#/components/schemas/Accept"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "application/xml" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "accept_response" : {
+                      "type" : "object",
+                      "properties" : {
+                        "request_status" : {
+                          "$ref" : "#/components/schemas/RequestStatus"
+                        },
+                        "accept" : {
+                          "$ref" : "#/components/schemas/Accept"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "the addressed Task does not exist",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "accept_response" : {
+                      "type" : "object",
+                      "properties" : {
+                        "request_status" : {
+                          "$ref" : "#/components/schemas/RequestStatusError"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "application/xml" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "accept_response" : {
+                      "type" : "object",
+                      "properties" : {
+                        "request_status" : {
+                          "$ref" : "#/components/schemas/RequestStatusError"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "requestBody" : {
+          "$ref" : "#/components/requestBodies/Accept"
+        }
+      }
+    },
+    "/customer/tasks/{id}/reject" : {
+      "parameters" : [ {
+        "name" : "id",
+        "in" : "path",
+        "required" : true,
+        "description" : "The automatically generated Task id as returned by the Create Task operation",
+        "schema" : {
+          "type" : "integer"
+        }
+      } ],
+      "put" : {
+        "summary" : "Reject the results of this task (used for iframe tasks)",
+        "description" : "Reject the results of this task.\n",
+        "tags" : [ "Task" ],
+        "responses" : {
+          "201" : {
+            "description" : "the Task was rejected successfully",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "reject_response" : {
+                      "type" : "object",
+                      "properties" : {
+                        "request_status" : {
+                          "$ref" : "#/components/schemas/RequestStatus"
+                        },
+                        "reject" : {
+                          "$ref" : "#/components/schemas/Accept"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "application/xml" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "reject_response" : {
+                      "type" : "object",
+                      "properties" : {
+                        "request_status" : {
+                          "$ref" : "#/components/schemas/RequestStatus"
+                        },
+                        "reject" : {
+                          "$ref" : "#/components/schemas/Accept"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "the addressed Task does not exist",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "reject_response" : {
+                      "type" : "object",
+                      "properties" : {
+                        "request_status" : {
+                          "$ref" : "#/components/schemas/RequestStatusError"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "application/xml" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "reject_response" : {
+                      "type" : "object",
+                      "properties" : {
+                        "request_status" : {
+                          "$ref" : "#/components/schemas/RequestStatusError"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "requestBody" : {
+          "$ref" : "#/components/requestBodies/Reject"
+        }
+      }
+    },
+    "/customer/tasks/{id}/reject/{job_id}" : {
+      "parameters" : [ {
+        "name" : "id",
+        "in" : "path",
+        "required" : true,
+        "description" : "The automatically generated Task id as returned by the Create Task operation",
+        "schema" : {
+          "type" : "integer"
+        }
+      }, {
+        "name" : "job_id",
+        "in" : "path",
+        "required" : true,
+        "description" : "The automatically generated Job id which belongs to the current Task.",
+        "schema" : {
+          "type" : "integer"
+        }
+      } ],
+      "put" : {
+        "summary" : "Reject the results of a job of this task (used for iframe tasks)",
+        "description" : "Reject the results of a job of this task.\n",
+        "tags" : [ "Task" ],
+        "responses" : {
+          "201" : {
+            "description" : "the Task was rejected successfully",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "reject_response" : {
+                      "type" : "object",
+                      "properties" : {
+                        "request_status" : {
+                          "$ref" : "#/components/schemas/RequestStatus"
+                        },
+                        "reject" : {
+                          "$ref" : "#/components/schemas/Accept"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "application/xml" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "reject_response" : {
+                      "type" : "object",
+                      "properties" : {
+                        "request_status" : {
+                          "$ref" : "#/components/schemas/RequestStatus"
+                        },
+                        "reject" : {
+                          "$ref" : "#/components/schemas/Accept"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "the addressed Task does not exist",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "reject_response" : {
+                      "type" : "object",
+                      "properties" : {
+                        "request_status" : {
+                          "$ref" : "#/components/schemas/RequestStatusError"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "application/xml" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "reject_response" : {
+                      "type" : "object",
+                      "properties" : {
+                        "request_status" : {
+                          "$ref" : "#/components/schemas/RequestStatusError"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "requestBody" : {
+          "$ref" : "#/components/requestBodies/Reject"
+        }
+      }
+    },
+    "/customer/tasks/{id}/grant_bonus" : {
+      "parameters" : [ {
+        "name" : "id",
+        "in" : "path",
+        "required" : true,
+        "description" : "The automatically generated Task id as returned by the Create Task operation",
+        "schema" : {
+          "type" : "integer"
+        }
+      } ],
+      "post" : {
+        "summary" : "Clickworker Bonus Payment",
+        "description" : "A customer has a way to make bonus payments to clickworkers. NOTE: 40% of the amount will be added to the basic payment.\n",
+        "tags" : [ "Task" ],
+        "responses" : {
+          "201" : {
+            "description" : "the bonus was granted",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "grant_bonus_response" : {
+                      "type" : "object",
+                      "properties" : {
+                        "request_status" : {
+                          "$ref" : "#/components/schemas/RequestStatus"
+                        },
+                        "bonus" : {
+                          "$ref" : "#/components/schemas/Bonus"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "application/xml" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "grant_bonus_response" : {
+                      "type" : "object",
+                      "properties" : {
+                        "request_status" : {
+                          "$ref" : "#/components/schemas/RequestStatus"
+                        },
+                        "bonus" : {
+                          "$ref" : "#/components/schemas/Bonus"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "the addressed Task does not exist",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "grant_bonus_response" : {
+                      "type" : "object",
+                      "properties" : {
+                        "request_status" : {
+                          "$ref" : "#/components/schemas/RequestStatusError"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "application/xml" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "grant_bonus_response" : {
+                      "type" : "object",
+                      "properties" : {
+                        "request_status" : {
+                          "$ref" : "#/components/schemas/RequestStatusError"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "object",
+                "properties" : {
+                  "amount" : {
+                    "type" : "number",
+                    "format" : "float",
+                    "description" : "Specified in Euros/Dollar depending on the currency you are paying in."
+                  },
+                  "clickworker_id" : {
+                    "type" : "number",
+                    "format" : "int32"
+                  },
+                  "comment" : {
+                    "type" : "string"
+                  }
+                },
+                "required" : [ "amount", "clickworker_id" ],
+                "example" : {
+                  "bouns" : {
+                    "clickworker_id" : 2,
+                    "amount" : 3
+                  }
+                }
+              }
+            }
+          },
+          "required" : true
+        }
+      }
+    },
+    "/customer/tasks/{id}/notifications" : {
+      "parameters" : [ {
+        "name" : "id",
+        "in" : "path",
+        "required" : true,
+        "description" : "The automatically generated Task id as returned by the Create Task operation",
+        "schema" : {
+          "type" : "integer"
+        }
+      } ],
+      "get" : {
+        "summary" : "List Registered Notifications",
+        "description" : "View only Notifications that are associated with a specific task.",
+        "tags" : [ "Notification" ],
+        "responses" : {
+          "200" : {
+            "description" : "Request could be handled successfully (even if there are no notifications)",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "notifications_response" : {
+                      "type" : "object",
+                      "properties" : {
+                        "request_status" : {
+                          "$ref" : "#/components/schemas/RequestStatus"
+                        },
+                        "notifications" : {
+                          "type" : "array",
+                          "items" : {
+                            "$ref" : "#/components/schemas/Notification"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "application/xml" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "notifications_response" : {
+                      "type" : "object",
+                      "properties" : {
+                        "request_status" : {
+                          "$ref" : "#/components/schemas/RequestStatus"
+                        },
+                        "notifications" : {
+                          "type" : "array",
+                          "items" : {
+                            "$ref" : "#/components/schemas/Notification"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "the addressed Task does not exist",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "task_response" : {
+                      "type" : "object",
+                      "properties" : {
+                        "request_status" : {
+                          "$ref" : "#/components/schemas/RequestStatusError"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "application/xml" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "task_response" : {
+                      "type" : "object",
+                      "properties" : {
+                        "request_status" : {
+                          "$ref" : "#/components/schemas/RequestStatusError"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/customer/notifications" : {
+      "get" : {
+        "summary" : "List Registered Notifications",
+        "description" : "View all Notification instances that are associated with the customer.",
+        "tags" : [ "Notification" ],
+        "responses" : {
+          "200" : {
+            "description" : "Request could be handled successfully (even if there are no notifications)",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "notifications_response" : {
+                      "type" : "object",
+                      "properties" : {
+                        "request_status" : {
+                          "$ref" : "#/components/schemas/RequestStatus"
+                        },
+                        "notifications" : {
+                          "type" : "array",
+                          "items" : {
+                            "$ref" : "#/components/schemas/Notification"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "application/xml" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "notifications_response" : {
+                      "type" : "object",
+                      "properties" : {
+                        "request_status" : {
+                          "$ref" : "#/components/schemas/RequestStatus"
+                        },
+                        "notifications" : {
+                          "type" : "array",
+                          "items" : {
+                            "$ref" : "#/components/schemas/Notification"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/customer/tasks/{id}/jobs" : {
+      "parameters" : [ {
+        "name" : "id",
+        "in" : "path",
+        "required" : true,
+        "description" : "The auto-generated Job id.",
+        "schema" : {
+          "type" : "integer"
+        }
+      } ],
+      "get" : {
+        "summary" : "Index Registered Jobs",
+        "description" : "Only view Jobs that are associated with a specific Task",
+        "tags" : [ "Job" ],
+        "responses" : {
+          "200" : {
+            "description" : "Request could be handled successfully (even if there are no jobs)",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "jobs_response" : {
+                      "type" : "object",
+                      "properties" : {
+                        "request_status" : {
+                          "$ref" : "#/components/schemas/RequestStatus"
+                        },
+                        "jobs" : {
+                          "type" : "array",
+                          "items" : {
+                            "$ref" : "#/components/schemas/PreviewJob"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "application/xml" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "jobs_response" : {
+                      "type" : "object",
+                      "properties" : {
+                        "request_status" : {
+                          "$ref" : "#/components/schemas/RequestStatus"
+                        },
+                        "jobs" : {
+                          "type" : "array",
+                          "items" : {
+                            "$ref" : "#/components/schemas/PreviewJob"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "the addressed Task does not exist",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "task_response" : {
+                      "type" : "object",
+                      "properties" : {
+                        "request_status" : {
+                          "$ref" : "#/components/schemas/RequestStatusError"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "application/xml" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "task_response" : {
+                      "type" : "object",
+                      "properties" : {
+                        "request_status" : {
+                          "$ref" : "#/components/schemas/RequestStatusError"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/customer/jobs" : {
+      "get" : {
+        "summary" : "Index Registered Jobs",
+        "description" : "View all Job instances that are assigned to a customer",
+        "tags" : [ "Job" ],
+        "responses" : {
+          "200" : {
+            "description" : "Request could be handled successfully (even if there are no jobs)",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "jobs_response" : {
+                      "type" : "object",
+                      "properties" : {
+                        "request_status" : {
+                          "$ref" : "#/components/schemas/RequestStatus"
+                        },
+                        "jobs" : {
+                          "type" : "array",
+                          "items" : {
+                            "$ref" : "#/components/schemas/PreviewJob"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "application/xml" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "jobs_response" : {
+                      "type" : "object",
+                      "properties" : {
+                        "request_status" : {
+                          "$ref" : "#/components/schemas/RequestStatus"
+                        },
+                        "jobs" : {
+                          "type" : "array",
+                          "items" : {
+                            "$ref" : "#/components/schemas/PreviewJob"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/customer/jobs/{id}" : {
+      "parameters" : [ {
+        "name" : "id",
+        "in" : "path",
+        "required" : true,
+        "description" : "The auto-generated Job id.",
+        "schema" : {
+          "type" : "integer"
+        }
+      } ],
+      "get" : {
+        "summary" : "Index Registered Jobs",
+        "description" : "Only view Jobs that are associated with a specific Task",
+        "tags" : [ "Job" ],
+        "responses" : {
+          "200" : {
+            "description" : "the Job was found",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "jobs_response" : {
+                      "type" : "object",
+                      "properties" : {
+                        "request_status" : {
+                          "$ref" : "#/components/schemas/RequestStatus"
+                        },
+                        "job" : {
+                          "$ref" : "#/components/schemas/Job"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "application/xml" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "jobs_response" : {
+                      "type" : "object",
+                      "properties" : {
+                        "request_status" : {
+                          "$ref" : "#/components/schemas/RequestStatus"
+                        },
+                        "job" : {
+                          "$ref" : "#/components/schemas/Job"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "the Job was not found",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "task_response" : {
+                      "type" : "object",
+                      "properties" : {
+                        "request_status" : {
+                          "$ref" : "#/components/schemas/RequestStatusError"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "application/xml" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "task_response" : {
+                      "type" : "object",
+                      "properties" : {
+                        "request_status" : {
+                          "$ref" : "#/components/schemas/RequestStatusError"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "put" : {
+        "summary" : "Update Jobs",
+        "description" : "To update a Job, the input attribute’s content must match the structure of the embedded form.",
+        "tags" : [ "Job" ],
+        "responses" : {
+          "200" : {
+            "description" : "the request was successfully handled",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "jobs_response" : {
+                      "type" : "object",
+                      "properties" : {
+                        "request_status" : {
+                          "$ref" : "#/components/schemas/RequestStatus"
+                        },
+                        "job" : {
+                          "$ref" : "#/components/schemas/Job"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "application/xml" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "jobs_response" : {
+                      "type" : "object",
+                      "properties" : {
+                        "request_status" : {
+                          "$ref" : "#/components/schemas/RequestStatus"
+                        },
+                        "job" : {
+                          "$ref" : "#/components/schemas/Job"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "the Job was not found",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "task_response" : {
+                      "type" : "object",
+                      "properties" : {
+                        "request_status" : {
+                          "$ref" : "#/components/schemas/RequestStatusError"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "application/xml" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "task_response" : {
+                      "type" : "object",
+                      "properties" : {
+                        "request_status" : {
+                          "$ref" : "#/components/schemas/RequestStatusError"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409" : {
+            "description" : "the input items provided by the customer do not match the form definition",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "task_response" : {
+                      "type" : "object",
+                      "properties" : {
+                        "request_status" : {
+                          "$ref" : "#/components/schemas/RequestStatusError"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "application/xml" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "task_response" : {
+                      "type" : "object",
+                      "properties" : {
+                        "request_status" : {
+                          "$ref" : "#/components/schemas/RequestStatusError"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "object",
+                "properties" : {
+                  "input" : {
+                    "type" : "object",
+                    "properties" : {
+                      "items" : {
+                        "type" : "array",
+                        "items" : {
+                          "$ref" : "#/components/schemas/Item"
+                        }
+                      }
+                    }
+                  }
+                },
+                "required" : [ "input" ],
+                "example" : {
+                  "job" : {
+                    "input" : {
+                      "items" : [ {
+                        "code" : "accepted",
+                        "content" : "1"
+                      }, {
+                        "code" : "grade_gr",
+                        "content" : "2"
+                      } ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "required" : true
+        }
+      }
+    },
+    "/customer/teams" : {
+      "get" : {
+        "summary" : "Index Teams",
+        "description" : "View all Teams that are assigned to a customer",
+        "tags" : [ "Team" ],
+        "responses" : {
+          "200" : {
+            "description" : "Request could be handled successfully (even if there are no teams)",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "teams_response" : {
+                      "type" : "object",
+                      "properties" : {
+                        "request_status" : {
+                          "$ref" : "#/components/schemas/RequestStatus"
+                        },
+                        "teams" : {
+                          "type" : "array",
+                          "items" : {
+                            "$ref" : "#/components/schemas/Team"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "application/xml" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "teams_response" : {
+                      "type" : "object",
+                      "properties" : {
+                        "request_status" : {
+                          "$ref" : "#/components/schemas/RequestStatus"
+                        },
+                        "teams" : {
+                          "type" : "array",
+                          "items" : {
+                            "$ref" : "#/components/schemas/Team"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post" : {
+        "summary" : "Create a new team",
+        "description" : "Teams allow to group clickworkers and include or exclude them from your projects. Teams are typically used in the following scenarios:\n\n* Excluding clickworkers that have already participated in a previous survey.\n* Only addressing specific clickworkers with a survey for follow up surveys\n* Excluding authors from your text project (blacklisting)\n* Assigning text projects to a list of known authors that have worked for you previously\n",
+        "tags" : [ "Team" ],
+        "responses" : {
+          "201" : {
+            "description" : "the team was created successfully",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "team_response" : {
+                      "type" : "object",
+                      "properties" : {
+                        "request_status" : {
+                          "$ref" : "#/components/schemas/RequestStatus"
+                        },
+                        "team" : {
+                          "$ref" : "#/components/schemas/Team"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "application/xml" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "team_response" : {
+                      "type" : "object",
+                      "properties" : {
+                        "request_status" : {
+                          "$ref" : "#/components/schemas/RequestStatus"
+                        },
+                        "team" : {
+                          "$ref" : "#/components/schemas/Team"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "object",
+                "properties" : {
+                  "name" : {
+                    "type" : "string"
+                  },
+                  "note" : {
+                    "type" : "string"
+                  },
+                  "hide" : {
+                    "type" : "boolean"
+                  }
+                },
+                "required" : [ "name", "hide" ],
+                "example" : {
+                  "team" : {
+                    "name" : "My team",
+                    "hide" : false
+                  }
+                }
+              }
+            }
+          },
+          "required" : true
+        }
+      }
+    },
+    "/customer/teams/{id}" : {
+      "parameters" : [ {
+        "name" : "id",
+        "in" : "path",
+        "required" : true,
+        "description" : "The auto-generated Job id.",
+        "schema" : {
+          "type" : "integer"
+        }
+      } ],
+      "put" : {
+        "summary" : "Update a team",
+        "description" : "To hide a team from marketplace drop down lists, use a PUT request to set attribute \"hide\" into true.",
+        "tags" : [ "Team" ],
+        "responses" : {
+          "200" : {
+            "description" : "the team was updated successfully",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "team_response" : {
+                      "type" : "object",
+                      "properties" : {
+                        "request_status" : {
+                          "$ref" : "#/components/schemas/RequestStatus"
+                        },
+                        "team" : {
+                          "$ref" : "#/components/schemas/Team"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "application/xml" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "team_response" : {
+                      "type" : "object",
+                      "properties" : {
+                        "request_status" : {
+                          "$ref" : "#/components/schemas/RequestStatus"
+                        },
+                        "team" : {
+                          "$ref" : "#/components/schemas/Team"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "object",
+                "properties" : {
+                  "name" : {
+                    "type" : "string"
+                  },
+                  "note" : {
+                    "type" : "string"
+                  },
+                  "hide" : {
+                    "type" : "boolean"
+                  },
+                  "add_user_ids" : {
+                    "type" : "array",
+                    "items" : { }
+                  },
+                  "remove_user_ids" : {
+                    "type" : "array",
+                    "items" : { }
+                  }
+                },
+                "example" : {
+                  "team" : {
+                    "note" : "Some information about my team",
+                    "hide" : true,
+                    "add_user_ids" : [ 1, 2, 3 ],
+                    "remove_user_ids" : [ 4 ]
+                  }
+                }
+              }
+            }
+          },
+          "required" : true
+        }
+      },
+      "delete" : {
+        "summary" : "Permanently delete a team",
+        "tags" : [ "Team" ],
+        "responses" : {
+          "204" : {
+            "description" : "The request could be successfully handled",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "team_response" : {
+                      "type" : "object",
+                      "properties" : {
+                        "request_status" : {
+                          "$ref" : "#/components/schemas/RequestStatus"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "application/xml" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "team_response" : {
+                      "type" : "object",
+                      "properties" : {
+                        "request_status" : {
+                          "$ref" : "#/components/schemas/RequestStatus"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "The given resource was not found",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "team_response" : {
+                      "type" : "object",
+                      "properties" : {
+                        "request_status" : {
+                          "$ref" : "#/components/schemas/RequestStatusError"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "application/xml" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "team_response" : {
+                      "type" : "object",
+                      "properties" : {
+                        "request_status" : {
+                          "$ref" : "#/components/schemas/RequestStatusError"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "servers" : [ {
+    "url" : "https://sandbox.clickworker.com/api/marketplace/v2"
+  } ],
+  "components" : {
+    "parameters" : {
+      "_page_size" : {
+        "name" : "_page_size",
+        "in" : "query",
+        "required" : false,
+        "description" : "Results of index requests use pagination to prevent excessive transfer volume. This URL parameter can control the page size. The default is 50. More size will be adjusted to 50 as well.",
+        "schema" : {
+          "type" : "integer",
+          "default" : ""
+        }
+      },
+      "_page_number" : {
+        "name" : "_page_number",
+        "in" : "query",
+        "required" : false,
+        "description" : "Defines the current page of a paginated result. E.g., a page size of 25 and a page number of 4 will display records from 76 to 100. The default is 1.",
+        "schema" : {
+          "type" : "integer",
+          "default" : ""
+        }
+      }
+    },
+    "requestBodies" : {
+      "Accept" : {
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "type" : "object",
+              "properties" : {
+                "description" : {
+                  "type" : "string"
+                }
+              },
+              "example" : {
+                "accept" : {
+                  "description" : "Well done!"
+                }
+              }
+            }
+          }
+        },
+        "required" : true
+      },
+      "Reject" : {
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "type" : "object",
+              "properties" : {
+                "description" : {
+                  "type" : "string"
+                }
+              },
+              "example" : {
+                "reject" : {
+                  "description" : "Well done!"
+                }
+              }
+            }
+          }
+        },
+        "required" : true
+      }
+    },
+    "securitySchemes" : {
+      "basicAuth" : {
+        "type" : "http",
+        "description" : "HTTP Basic Authentication.",
+        "scheme" : "basic"
+      }
+    },
+    "schemas" : {
+      "Customer" : {
+        "type" : "object",
+        "properties" : {
+          "link" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Link"
+            }
+          },
+          "balance" : {
+            "type" : "object",
+            "properties" : {
+              "balance_amount" : {
+                "type" : "string"
+              },
+              "reserved_amount" : {
+                "type" : "string"
+              },
+              "credit_limit" : {
+                "type" : "string"
+              },
+              "currency_code" : {
+                "type" : "string"
+              }
+            }
+          }
+        }
+      },
+      "TaskTemplatePreview" : {
+        "type" : "object",
+        "properties" : {
+          "link" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Link"
+            }
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "product" : {
+            "type" : "object",
+            "properties" : {
+              "link" : {
+                "type" : "array",
+                "items" : {
+                  "$ref" : "#/components/schemas/Link"
+                }
+              }
+            }
+          },
+          "is_draft" : {
+            "type" : "boolean"
+          }
+        }
+      },
+      "TaskTemplate" : {
+        "description" : "In order to submit work to Clickworker through the API, the customer must provide information on how his request is structured and in which form results are expected back. For example, one customer might want to order a text using our TextCreate product, which should be structured using a title section and a content section, while another customer might need the text to be structured using title, abstract, and content sections.\n\nSimilarly, one customer might provide a list of URLs of company websites when using our product AddressResearch, while another customer might supply the company name and address for verification using the AddressResearch product.\n\nTaskTemplates are used to define input and result structures, as well as to specify additional parameters required to fulfill a task, such as the target language for an article.\nFor each input and result field, additional options can be supplied to control the presentation of each field. Constraints, such as whether a field is optional or mandatory, can also be supplied.\n\nTo summarize, a Task Template serves multiple purposes:\n* Select and configure an existing product by using its defined Product Attributes.\n* Define how Tasks are presented to the clickworker using Form Elements\n* Select or exclude clickworkers from certain Tasks using Clickworker List references.\n",
+        "type" : "object",
+        "properties" : {
+          "link" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Link"
+            }
+          },
+          "product" : {
+            "type" : "object",
+            "properties" : {
+              "link" : {
+                "type" : "array",
+                "items" : {
+                  "$ref" : "#/components/schemas/Link"
+                }
+              },
+              "attributes" : {
+                "type" : "array",
+                "items" : {
+                  "$ref" : "#/components/schemas/Attribute"
+                }
+              }
+            }
+          },
+          "form" : {
+            "type" : "object",
+            "properties" : {
+              "elements" : {
+                "type" : "array",
+                "items" : {
+                  "$ref" : "#/components/schemas/FormElement"
+                }
+              }
+            }
+          }
+        }
+      },
+      "PreviewTask" : {
+        "type" : "object",
+        "xml" : {
+          "name" : "Task"
+        },
+        "properties" : {
+          "link" : {
+            "$ref" : "#/components/schemas/Link"
+          },
+          "customer_ref" : {
+            "type" : "string",
+            "description" : "The customer may use this attribute to transport internal references."
+          },
+          "state" : {
+            "type" : "string",
+            "description" : "The current Task state. See section \"Task States\" for details."
+          },
+          "template" : {
+            "type" : "object",
+            "description" : "The Task Template’s unique resource identifier. Contains a reference to the selected product.",
+            "properties" : {
+              "link" : {
+                "$ref" : "#/components/schemas/Link"
+              },
+              "product" : {
+                "type" : "object",
+                "properties" : {
+                  "link" : {
+                    "type" : "array",
+                    "items" : {
+                      "$ref" : "#/components/schemas/Link"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "Task" : {
+        "description" : "A Task represents a specific work item (payload of work) to be processed and delivered by clickworkers, such as a test to be written, or a single address to be researched. Before a task can be submitted, a Task Template must be defined, specifying the details of how the task should be fulfilled. While the Task Template defines aspects that are common to all Tasks (like selected product, input form, etc.) a Task carries the actual payload. The Task’s data can roughly be separated into two sections:\n\n1. Instructional data is the input presented to the clickworker (like text to translate, keywords, instructions, etc.)\n2. Result fields contain the final results of the task resolution (like translated text, created text, research results)\n\n#### Task Result Additions\nThe result attribute contains input that was created by clickworkers using the Form Elements defined by the associated Task Template. In addition, service and statistical information may be added by the system.\n",
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "integer",
+            "description" : "The Task identifier"
+          },
+          "href" : {
+            "type" : "string",
+            "description" : "The Task’s unique resource identifier"
+          },
+          "customer_ref" : {
+            "type" : "string",
+            "description" : "The customer may use this attribute to transport internal references."
+          },
+          "order_id" : {
+            "type" : "string",
+            "description" : "Each task is assigned to an order."
+          },
+          "template" : {
+            "type" : "object",
+            "description" : "The Task Template’s unique resource identifier. Contains a reference to the selected product.",
+            "properties" : {
+              "link" : {
+                "type" : "array",
+                "items" : {
+                  "$ref" : "#/components/schemas/Link"
+                }
+              }
+            }
+          },
+          "state" : {
+            "type" : "string"
+          },
+          "product" : {
+            "type" : "object",
+            "properties" : {
+              "link" : {
+                "type" : "array",
+                "items" : {
+                  "$ref" : "#/components/schemas/Link"
+                }
+              }
+            }
+          },
+          "amount" : {
+            "type" : "number",
+            "format" : "float"
+          },
+          "link" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Link"
+            }
+          },
+          "net_amount" : {
+            "type" : "number",
+            "format" : "float"
+          },
+          "tax_amount" : {
+            "type" : "number",
+            "format" : "float"
+          },
+          "currency" : {
+            "type" : "string"
+          },
+          "input" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Item"
+            }
+          },
+          "results" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Result"
+            }
+          }
+        }
+      },
+      "PreviewJob" : {
+        "type" : "object",
+        "properties" : {
+          "link" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Link"
+            }
+          },
+          "task" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Link"
+            }
+          }
+        }
+      },
+      "Job" : {
+        "description" : "Whenever the customer confirms a new task, it is accomplished based on a predefined, product-specific workflow. The steps of this workflow are called “Jobs.” This is illustrated by the following workflow, consisting of three Jobs:\n\n1. \"create\" performed by a clickworker writing a text according to a task’s specifications\n2. \"review\" performed by another clickworker who reviews the results of the first job\n3. \"signoff\" performed by the customer, who approves or declines the results.\n\nA task is completed when the entire workflow is completed. This occurs when all jobs are finished.\n\nUsing the Marketplace API, customers can only see and manipulate jobs that are assigned to them. Usually, these are jobs for signing off on the results. The product details contain the relevant meta information about the job’s input and results.\n",
+        "type" : "object",
+        "properties" : {
+          "link" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Link"
+            }
+          },
+          "id" : {
+            "type" : "number"
+          },
+          "task" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Link"
+            }
+          },
+          "items" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Item"
+            }
+          }
+        }
+      },
+      "Team" : {
+        "description" : "Teams allow to group clickworkers and include or exclude them from your projects. Teams are typically used in the following scenarios:\n* Excluding clickworkers that have already participated in a previous survey.\n* Only addressing specific clickworkers with a survey for follow up surveys\n* Excluding authors from your text project (blacklisting)\n* Assigning text projects to a list of known authors that have worked for you previously\n",
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "number"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "note" : {
+            "type" : "string"
+          },
+          "hide" : {
+            "type" : "boolean"
+          }
+        }
+      },
+      "Bonus" : {
+        "description" : "A customer has a way to make bonus payments to clickworkers. NOTE: 40% of the amount will be added to the basic payment.\n",
+        "type" : "object",
+        "properties" : {
+          "amount" : {
+            "type" : "number",
+            "format" : "float"
+          },
+          "clickworker_id" : {
+            "type" : "number",
+            "format" : "int32"
+          },
+          "comment" : {
+            "type" : "string"
+          }
+        }
+      },
+      "Submit" : {
+        "description" : "Results from formulars hosted on external servers.\n",
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "number",
+            "format" : "int32"
+          },
+          "clickworker_id" : {
+            "type" : "number",
+            "format" : "int32"
+          }
+        }
+      },
+      "Accept" : {
+        "description" : "Accept the results\n",
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "number",
+            "format" : "int32"
+          }
+        }
+      },
+      "Item" : {
+        "type" : "object",
+        "properties" : {
+          "code" : {
+            "type" : "string"
+          },
+          "content" : {
+            "type" : "string"
+          }
+        }
+      },
+      "Result" : {
+        "type" : "object",
+        "properties" : {
+          "code" : {
+            "type" : "string"
+          },
+          "content" : {
+            "type" : "string"
+          }
+        }
+      },
+      "Attribute" : {
+        "type" : "object",
+        "properties" : {
+          "code" : {
+            "type" : "string"
+          },
+          "value" : {
+            "type" : "string"
+          }
+        }
+      },
+      "FormElement" : {
+        "type" : "object",
+        "properties" : {
+          "type" : {
+            "type" : "string"
+          },
+          "titles" : {
+            "type" : "object",
+            "properties" : {
+              "en" : {
+                "type" : "string"
+              },
+              "de" : {
+                "type" : "string"
+              }
+            }
+          },
+          "item_code" : {
+            "type" : "string"
+          },
+          "is_output" : {
+            "type" : "boolean"
+          },
+          "is_mandatory" : {
+            "type" : "boolean"
+          }
+        }
+      },
+      "NotificationRegistration" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "integer",
+            "description" : "The Notification id"
+          },
+          "href" : {
+            "type" : "string",
+            "description" : "The Notification unique resource identifier"
+          },
+          "event" : {
+            "type" : "string",
+            "description" : "The symbolic event name. The following codes are defined:\n* TASK_COMPLETED\n* TASK_TIMEDOUT\n* CUSTOMER_INPUT_REQUIRED\n"
+          },
+          "callback_url" : {
+            "type" : "string",
+            "description" : "The callback URL"
+          },
+          "callback_method" : {
+            "type" : "string",
+            "description" : "The HTTP method, one of GET or POST"
+          },
+          "payload_format" : {
+            "type" : "string",
+            "description" : "Payload format indicator, either XML or JSON. Only supported if method is set to POST.\nThe actual payload will be a copy of the selected Task entity in the requested format.\n"
+          }
+        }
+      },
+      "Notification" : {
+        "type" : "object",
+        "properties" : {
+          "link" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Link"
+            }
+          },
+          "event" : {
+            "type" : "string"
+          },
+          "callback_url" : {
+            "type" : "string"
+          },
+          "callback_method" : {
+            "type" : "string"
+          },
+          "payload_format" : {
+            "type" : "string"
+          },
+          "author_id" : {
+            "type" : "string"
+          },
+          "task_id" : {
+            "type" : "string"
+          }
+        }
+      },
+      "RequestStatus" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "string",
+            "description" : "A unique request id. Clients are encouraged to store this id for support and debugging purposes."
+          },
+          "status_code" : {
+            "type" : "integer",
+            "description" : "The HTTP status code"
+          },
+          "status_text" : {
+            "type" : "string",
+            "description" : "The equivalent HTTP status text"
+          },
+          "valid" : {
+            "type" : "boolean",
+            "description" : "Request validity indicator. true if the request could be processed successfully"
+          },
+          "messages" : {
+            "type" : "array",
+            "description" : "A list of additional messages, to provide more in-depth information",
+            "items" : {
+              "type" : "string"
+            }
+          },
+          "total_count" : {
+            "type" : "integer",
+            "description" : "Reports the total number of entities matching the request. Will be zero for empty results."
+          },
+          "page_num" : {
+            "type" : "integer",
+            "description" : "The current page in a paginated result. Page numbering starts at page 1, even if the result is empty (total_count is zero)"
+          },
+          "page_size" : {
+            "type" : "integer",
+            "description" : "The current page size in a paginated result. The default value is 50, unless overridden by request parameter -_page_size."
+          }
+        }
+      },
+      "RequestStatusError" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "string",
+            "description" : "A unique request id. Clients are encouraged to store this id for support and debugging purposes."
+          },
+          "status_code" : {
+            "type" : "integer",
+            "description" : "The HTTP status code"
+          },
+          "status_text" : {
+            "type" : "string",
+            "description" : "The equivalent HTTP status text"
+          },
+          "valid" : {
+            "type" : "boolean",
+            "description" : "Request validity indicator. true if the request could be processed successfully"
+          }
+        }
+      },
+      "Link" : {
+        "type" : "object",
+        "properties" : {
+          "type" : {
+            "type" : "string",
+            "xml" : {
+              "attribute" : true
+            }
+          },
+          "href" : {
+            "type" : "string",
+            "xml" : {
+              "attribute" : true
+            }
+          },
+          "rel" : {
+            "type" : "string",
+            "xml" : {
+              "attribute" : true
+            }
+          }
+        }
+      }
+    }
+  }
+}
