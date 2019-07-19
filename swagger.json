@@ -12,6 +12,7 @@
       "get" : {
         "summary" : "User profile",
         "description" : "Get the account information.\n",
+        "tags" : [ "Customer" ],
         "responses" : {
           "200" : {
             "description" : "The users profile information",
