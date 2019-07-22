@@ -3311,6 +3311,29 @@
           },
           "code" : {
             "type" : "string"
+          },
+          "titles" : {
+            "type" : "string"
+          },
+          "description" : {
+            "type" : "string"
+          },
+          "available" : {
+            "type" : "boolean"
+          },
+          "attributes" : {
+            "type" : "array",
+            "items" : {
+              "code" : {
+                "type" : "string"
+              },
+              "is_mandatory" : {
+                "type" : "boolean"
+              },
+              "titles" : {
+                "type" : "string"
+              }
+            }
           }
         }
       }
