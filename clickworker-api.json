@@ -19,7 +19,7 @@
           "required" : true,
           "schema" : {
             "type" : "string",
-            "description" : "Account information is returned for the customer account, which authenticats using the requests''s credentials"
+            "description" : "Account information is returned for the customer account, which authenticates using the requests''s credentials"
           }
         } ],
         "responses" : {
