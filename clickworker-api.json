@@ -63,7 +63,8 @@
                       }
                     }
                   }
-                }
+                },
+                "example" : "<customer_response>\n    <request_status> [...] </request_status> \n    <customer>\n        <link href=“/api/marketplace/v2/customer” rel=”self” type=”application/xml” />\n        <balance> \n            <balance_amount>20000.00</balance_amount> \n            <reserved_amount>5000.00</reserved_amount> \n            <credit_limit>3000.00</credit_limit> \n            <currency_code>EUR</currency_code>\n        </balance> \n    </customer>\n</customer_response>"
               }
             }
           },
