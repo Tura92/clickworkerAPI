@@ -116,7 +116,8 @@
                       "$ref" : "#/components/schemas/Product"
                     }
                   }
-                }
+                },
+                "example" : "<products_response>\n</products_response>"
               }
             }
           }
