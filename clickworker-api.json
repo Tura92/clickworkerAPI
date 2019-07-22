@@ -42,6 +42,24 @@
                       }
                     }
                   }
+                },
+                "example" : {
+                  "customer_response" : {
+                    "request_status" : [ ],
+                    "customer" : {
+                      "link" : [ {
+                        "href" : "/api/marketplace/v2/customer",
+                        "rel" : "self",
+                        "type" : "application/json"
+                      } ]
+                    },
+                    "balance" : {
+                      "balance_amount" : 20000.0,
+                      "reserved_amount" : 5000.0,
+                      "credit_limit" : 3000.0,
+                      "currency_code" : "EUR"
+                    }
+                  }
                 }
               },
               "application/xml" : {
@@ -103,13 +121,40 @@
                       "$ref" : "#/components/schemas/Product"
                     }
                   }
+                },
+                "example" : {
+                  "request_status" : {
+                    "products" : [ {
+                      "link" : [ {
+                        "href" : "/api/marketplace/v2/products/TextCreate",
+                        "rel" : "product",
+                        "type" : "application/json"
+                      } ],
+                      "code" : "TextCreate",
+                      "titles" : {
+                        "en" : "Text creation"
+                      },
+                      "available" : true
+                    }, {
+                      "link" : [ {
+                        "href" : "“/api/marketplace/v2/products/TextCreateWithKeywords”",
+                        "rel" : "“product”",
+                        "type" : "“application/json”"
+                      } ],
+                      "code" : "TextCreationWithKeywords",
+                      "titles" : {
+                        "en" : "Text creation with keywords"
+                      },
+                      "available" : true
+                    } ]
+                  }
                 }
               },
               "application/xml" : {
                 "schema" : {
                   "type" : "object",
                   "xml" : {
-                    "name" : "request_status"
+                    "name" : "products_response"
                   },
                   "properties" : {
                     "request_status" : {
@@ -117,9 +162,109 @@
                     }
                   }
                 },
-                "example" : "<products_response>\n</products_response>"
+                "example" : "<products_response> \n    <request_status>...</request_status> \n    <products>\n        <link href=“/api/marketplace/v2/products/TextCreate” rel=”product” type=”application/xml” /> \n        <code>TextCreate</code> \n        <titles>\n            <en>Text creation</en> \n        </titles> \n        <available>true</available>\n  </products> \n  <products>\n        <link href=“/api/marketplace/v2/products/TextCreateWithKeywords” rel=”product” type=”application/xml” />\n        <code>TextCreateWithKeywords</code> \n        <titles>\n            <en>Text creation with keywords</en> \n        </titles>\n        <available>true</available>\n    </products> \n</products_response>"
               }
             }
+          }
+        }
+      }
+    },
+    "/{context}/products/{code}" : {
+      "get" : {
+        "description" : "View product details",
+        "summary" : "View product details",
+        "tags" : [ "Product" ],
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "context",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "path",
+          "name" : "code",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "The adressed resource was found",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "product_response" : {
+                      "type" : "object",
+                      "properties" : {
+                        "request_status" : {
+                          "$ref" : "#/components/schemas/Product"
+                        }
+                      }
+                    }
+                  }
+                },
+                "example" : {
+                  "product_response" : {
+                    "request_status" : {
+                      "product" : null,
+                      "link" : [ {
+                        "href" : "/api/marketplace/v2/products/product_research",
+                        "rel" : "self",
+                        "type" : "application/json"
+                      } ],
+                      "code" : "product_research",
+                      "titles" : {
+                        "en" : "Product Research"
+                      },
+                      "available" : true,
+                      "attributes" : [ {
+                        "code" : "research_language",
+                        "type" : "option",
+                        "is_mandatory" : true,
+                        "titles" : {
+                          "en" : "Research Language"
+                        },
+                        "helps" : {
+                          "en" : "Defines the language to use for creating the research"
+                        }
+                      } ],
+                      "options" : [ {
+                        "titles" : {
+                          "en" : "German"
+                        },
+                        "value" : "de"
+                      }, {
+                        "titles" : {
+                          "en" : "English"
+                        },
+                        "value" : "en"
+                      } ]
+                    }
+                  }
+                }
+              },
+              "application/xml" : {
+                "schema" : {
+                  "type" : "object",
+                  "xml" : {
+                    "name" : "products_response"
+                  },
+                  "properties" : {
+                    "request_status" : {
+                      "$ref" : "#/components/schemas/Product"
+                    }
+                  }
+                },
+                "example" : "<product_response> \n    <request_status>...</request_status> \n    <product>\n        <link href=“/api/marketplace/v2/products/product_research” rel=”self” type=”application/xml” /> \n        <code>product_research</code> \n        <titles>\n            <en>Product Research</en> \n        </titles>\n        <descriptions>\n            <en>Identify product details using a Internet search.</en> \n        </descriptions>\n        <available>true</available>\n        <attributes>\n            <code>research_language</code> \n            <type>option</type> \n            <is_mandatory>true</is_mandatory> \n            <titles>\n                <en>Research Language</en> \n            </titles>\n            <helps>\n                <en>Defines the language to use for creating the research result.</en> \n            </helps> \n            <options>\n                <titles> \n                    <en>German</en>\n                </titles>\n                <value>de</value> \n            </options> \n            <options>\n                <titles> \n                <en>English</en>\n                </titles>\n                <value>en</value> \n            </options>\n        </attributes> \n    </product>\n</product_response>"
+              }
+            }
+          },
+          "404" : {
+            "description" : "The adressed resource was not found"
           }
         }
       }
