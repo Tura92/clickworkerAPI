@@ -104,6 +104,19 @@
                     }
                   }
                 }
+              },
+              "application/xml" : {
+                "schema" : {
+                  "type" : "object",
+                  "xml" : {
+                    "name" : "request_status"
+                  },
+                  "properties" : {
+                    "request_status" : {
+                      "$ref" : "#/components/schemas/Product"
+                    }
+                  }
+                }
               }
             }
           }
@@ -3343,8 +3356,8 @@
                   "description" : "The localized help text for this Product Attribute"
                 },
                 "options" : {
-                  "type" : "array",
-                  "description" : "A list of predefined attribute values, only present if type is \"option\". An option has two attributes:\n\n1. The option value (opt_value)\n2. The options title (opt_title)"
+                  "type" : "object",
+                  "description" : "A list of predefined attribute values, only present if type is \"option\". An option has two attributes:\n\n  1. The option value (opt_value)\n  2. The options title (opt_title)"
                 },
                 "value" : {
                   "type" : "string",
