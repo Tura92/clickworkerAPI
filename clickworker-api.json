@@ -115,7 +115,12 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "type" : "object"
+                  "type" : "object",
+                  "properties" : {
+                    "request_status" : {
+                      "$ref" : "#/components/schemas/Product"
+                    }
+                  }
                 }
               }
             }
@@ -3319,23 +3324,49 @@
             "type" : "string"
           },
           "available" : {
-            "type" : "boolean"
+            "type" : "boolean",
+            "description" : "true, if the product is currently available for ordering."
           },
           "attributes" : {
             "type" : "array",
+            "description" : "A list of product attributs that are supported (and sometimes required) to configure the product. See the \"Product Attribute\" section for a formal description.",
             "items" : {
               "properties" : {
                 "code" : {
-                  "type" : "string"
+                  "type" : "string",
+                  "description" : "A symbolic name for the Product Attribute, URI compatible"
                 },
                 "type" : {
-                  "type" : "string"
+                  "type" : "string",
+                  "description" : "Product Attribute type indicator. One of the following:\n\n* string: for text attributes\n* option: for predefined attribute values\n* integer: for numeric attributes\n* date: for time_based attributes"
                 },
                 "is_mandatory" : {
-                  "type" : "boolean"
+                  "type" : "boolean",
+                  "description" : "Mandatory indicator"
+                },
+                "min_length" : {
+                  "type" : "integer",
+                  "description" : "Minimum text value length for type=string"
+                },
+                "max_length" : {
+                  "type" : "integer",
+                  "description" : "Maximum text value length for type=string"
                 },
                 "titles" : {
-                  "type" : "string"
+                  "type" : "string",
+                  "description" : "The localized title of this Product Attribute"
+                },
+                "helps" : {
+                  "type" : "string",
+                  "description" : "The localized help text for this Product Attribute"
+                },
+                "options" : {
+                  "type" : "array",
+                  "description" : "A list of predefined attribute values, only present if type is \"option\". An option has two attributes:\n\n1. The option value (opt_value)\n2. The options title (opt_title)"
+                },
+                "value" : {
+                  "type" : "string",
+                  "description" : "The Product Attribute's value"
                 }
               }
             }
