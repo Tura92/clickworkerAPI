@@ -3324,14 +3324,19 @@
           "attributes" : {
             "type" : "array",
             "items" : {
-              "code" : {
-                "type" : "string"
-              },
-              "is_mandatory" : {
-                "type" : "boolean"
-              },
-              "titles" : {
-                "type" : "string"
+              "properties" : {
+                "code" : {
+                  "type" : "string"
+                },
+                "type" : {
+                  "type" : "string"
+                },
+                "is_mandatory" : {
+                  "type" : "boolean"
+                },
+                "titles" : {
+                  "type" : "string"
+                }
               }
             }
           }
