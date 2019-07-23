@@ -8,11 +8,20 @@
     "basicAuth" : [ ]
   } ],
   "paths" : {
-    "/customer" : {
+    "/{context}/customer" : {
       "get" : {
         "summary" : "User profile",
         "description" : "Account information is returned for the customer account, which authenticates using the request’s credentials. As a result, there is no customer id or name present in the URI.\n\n\n  Calling /customer without further information will print the customer’s account data.",
         "tags" : [ "Customer" ],
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "context",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "description" : "Account information is returned for the customer account, which authenticates using the requests''s credentials"
+          }
+        } ],
         "responses" : {
           "200" : {
             "description" : "The resource was found",
@@ -86,11 +95,20 @@
         }
       }
     },
-    "/product" : {
+    "/{context}/product" : {
       "get" : {
         "description" : "Displays a brief summary of each product. Note: This operation only lists products that are currently available. Deprecated products may still be accessed using their URI for reference in existing orders.",
         "summary" : "List available product",
         "tags" : [ "Product" ],
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "context",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "description" : "Product context"
+          }
+        } ],
         "responses" : {
           "200" : {
             "description" : "The request could be properly handled (even if no products were found)",
@@ -151,12 +169,19 @@
         }
       }
     },
-    "/products/{code}" : {
+    "/{context}/products/{code}" : {
       "get" : {
         "description" : "View product details",
         "summary" : "View product details",
         "tags" : [ "Product" ],
         "parameters" : [ {
+          "in" : "path",
+          "name" : "context",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
           "in" : "path",
           "name" : "code",
           "required" : true,
@@ -244,12 +269,19 @@
         }
       }
     },
-    "/clickworkers" : {
+    "/{context}/clickworkers" : {
       "get" : {
         "description" : "Counts all clickworkers within a given radius. Its geographical center and radius describe the range. The minimum radius allowed is 10 kilometers (6.2 miles); smaller radiuses will be adjusted accordingly.",
         "summary" : "Count clickworkers in radius",
         "tags" : [ "Clickworkers" ],
         "parameters" : [ {
+          "in" : "path",
+          "name" : "context",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
           "in" : "query",
           "name" : "api_method",
           "required" : true,
